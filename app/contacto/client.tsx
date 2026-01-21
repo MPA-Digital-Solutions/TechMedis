@@ -1,0 +1,194 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Phone, Mail, MapPin, Send } from "lucide-react";
+import { CTAButton } from "@/components/cta-button";
+import { useToast } from "@/components/ui/use-toast";
+
+const contactInfo = [
+  { icon: <Phone size={24} />, label: "+1 (555) 123-4567" },
+  { icon: <Mail size={24} />, label: "info@techmedis.com" },
+  { icon: <MapPin size={24} />, label: "Av. Principal 123, Ciudad" },
+];
+
+export default function ContactoClient() {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+      toast({
+        title: "Error",
+        description: "Por favor completa todos los campos requeridos",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setTimeout(() => {
+      toast({
+        title: "Mensaje Enviado",
+        description: "Un asesor se pondrá en contacto con usted a la brevedad.",
+      });
+      setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+      setIsSubmitting(false);
+    }, 1500);
+  };
+
+  return (
+    <section className="py-24 md:py-32 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+          
+          {/* Contact Info Side */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl md:text-5xl font-semibold text-techmedis-primary mb-8">Contáctenos</h1>
+            <p className="text-xl text-techmedis-text mb-12 leading-relaxed font-light">
+              Estamos aquí para responder sus consultas técnicas, comerciales o de soporte. Complete el formulario y nuestro equipo especializado le responderá con prioridad.
+            </p>
+            
+            <div className="space-y-8 mb-16">
+              {contactInfo.map((item, index) => (
+                <div key={index} className="flex items-center space-x-6 text-techmedis-text">
+                  <div className="text-techmedis-secondary p-3 bg-techmedis-light rounded-full">{item.icon}</div>
+                  <span className="text-lg font-medium">{item.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-techmedis-light p-8 rounded-lg border border-gray-100">
+              <h3 className="text-lg font-bold text-techmedis-primary mb-4">Horario de Atención</h3>
+              <p className="text-techmedis-text mb-2">Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+              <p className="text-techmedis-text mb-6">Sábados: 9:00 AM - 1:00 PM</p>
+              <div className="inline-block bg-white px-4 py-2 rounded-md shadow-sm border border-gray-100">
+                <p className="text-sm text-techmedis-secondary font-semibold flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  Soporte técnico de emergencia 24/7
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Form Side */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-white p-8 md:p-10 border border-gray-100 rounded-xl shadow-lg"
+          >
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-techmedis-text mb-2">Nombre Completo *</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-4 bg-techmedis-light/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all outline-none text-techmedis-text placeholder-gray-400"
+                  placeholder="Su nombre"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-techmedis-text mb-2">Email *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-4 bg-techmedis-light/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all outline-none text-techmedis-text placeholder-gray-400"
+                    placeholder="email@empresa.com"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-techmedis-text mb-2">Teléfono *</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-4 bg-techmedis-light/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all outline-none text-techmedis-text placeholder-gray-400"
+                    placeholder="+1 234 567"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="company" className="block text-sm font-medium text-techmedis-text mb-2">Empresa / Clínica</label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  className="w-full px-4 py-4 bg-techmedis-light/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all outline-none text-techmedis-text placeholder-gray-400"
+                  placeholder="Nombre de su institución"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-techmedis-text mb-2">Mensaje *</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={4}
+                  className="w-full px-4 py-4 bg-techmedis-light/50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all outline-none resize-none text-techmedis-text placeholder-gray-400"
+                  placeholder="¿En qué podemos ayudarle?"
+                />
+              </div>
+
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full flex items-center justify-center space-x-2 py-4 text-lg bg-techmedis-primary hover:bg-techmedis-primary/90 text-white px-6 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <span>Enviando...</span>
+                  ) : (
+                    <>
+                      <span>Consultar con un asesor</span>
+                      <Send size={20} />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}

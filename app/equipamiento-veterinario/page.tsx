@@ -1,0 +1,52 @@
+import type { Metadata } from "next";
+import { getProducts } from "@/lib/actions/products";
+import { ProductsGrid } from "@/components/products-grid";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Equipamiento Veterinario - Techmedis",
+  description: "Catálogo de equipamiento veterinario especializado. Soluciones integrales para clínicas veterinarias.",
+};
+
+export default async function EquipoVeterinarioPage() {
+  const products = await getProducts({ category: "veterinario", status: "active" });
+
+  return (
+    <>
+      {/* Header */}
+      <section className="bg-gradient-to-br from-green-600 to-green-700 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                Equipamiento Veterinario
+              </h1>
+              <p className="text-xl text-white/90 font-light leading-relaxed">
+                Soluciones especializadas para clínicas veterinarias. 
+                Equipos de alta precisión para el cuidado integral de los animales.
+              </p>
+            </div>
+            <div className="rounded-2xl overflow-hidden shadow-2xl">
+              <img 
+                src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def" 
+                alt="Equipamiento Veterinario" 
+                className="w-full h-80 object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Catálogo */}
+      <section className="py-16 md:py-24 bg-techmedis-light">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ProductsGrid 
+            products={products} 
+            emptyMessage="No hay equipamiento veterinario disponible en este momento."
+          />
+        </div>
+      </section>
+    </>
+  );
+}

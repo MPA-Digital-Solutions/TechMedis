@@ -6,8 +6,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: techmedis
-      MYSQL_USER: techmedis_user
-      MYSQL_PASSWORD: techmedis_pass
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
