@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 interface WhatsAppButtonProps {
   phoneNumber?: string;
@@ -8,10 +9,29 @@ interface WhatsAppButtonProps {
 }
 
 export function WhatsAppButton({ 
-  phoneNumber = "5491112345678", 
+  phoneNumber, 
   message = "Hola! Estoy interesado en sus equipos médicos. ¿Podrían brindarme más información?" 
 }: WhatsAppButtonProps) {
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  const [configuredNumber, setConfiguredNumber] = useState<string>("5491112345678");
+
+  useEffect(() => {
+    // Fetch WhatsApp number from config if not provided as prop
+    if (!phoneNumber) {
+      fetch('/api/config/whatsapp')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.number) {
+            setConfiguredNumber(data.number);
+          }
+        })
+        .catch(err => {
+          console.warn('Failed to load WhatsApp config, using default:', err);
+        });
+    }
+  }, [phoneNumber]);
+
+  const finalPhoneNumber = phoneNumber || configuredNumber;
+  const whatsappUrl = `https://wa.me/${finalPhoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
     <motion.a
