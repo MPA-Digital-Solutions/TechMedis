@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getProducts } from "@/lib/actions/products";
+import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function EquipoVeterinarioPage() {
-  const products = await getProducts({ category: "veterinario", status: "active" });
+  const [products, whatsappNumber] = await Promise.all([
+    getProducts({ category: "veterinario", status: "active" }),
+    getWhatsAppNumber(),
+  ]);
 
   return (
     <>
@@ -44,6 +48,7 @@ export default async function EquipoVeterinarioPage() {
           <ProductsGrid 
             products={products} 
             emptyMessage="No hay equipamiento veterinario disponible en este momento."
+            whatsappNumber={whatsappNumber}
           />
         </div>
       </section>

@@ -10,9 +10,10 @@ import type { Product } from "@/lib/validations/product";
 interface ProductDetailClientProps {
   product: Product;
   relatedProducts: Product[];
+  whatsappNumber?: string;
 }
 
-export function ProductDetailClient({ product, relatedProducts }: ProductDetailClientProps) {
+export function ProductDetailClient({ product, relatedProducts, whatsappNumber = "5491112345678" }: ProductDetailClientProps) {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-AR", {
       style: "currency",
@@ -30,7 +31,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
   const whatsappMessage = encodeURIComponent(
     `Hola! Estoy interesado en el producto: ${product.name}. ¿Podrían darme más información?`
   );
-  const whatsappUrl = `https://wa.me/5493585050000?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
     <>
@@ -197,7 +198,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
                   >
-                    <ProductCard product={relatedProduct} />
+                    <ProductCard product={relatedProduct} whatsappNumber={whatsappNumber} />
                   </motion.div>
                 ))}
               </div>

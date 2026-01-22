@@ -27,3 +27,29 @@ model Product {
   @@index([category])
   @@index([status])
 }
+
+model Config {
+  id        String   @id @default(cuid())
+  key       String   @unique @db.VarChar(100)
+  value     String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  email     String?  @db.VarChar(255)
+  phone     String?  @db.VarChar(50)
+  company   String?  @db.VarChar(255)
+  message   String   @db.Text
+  source    String   @default("contact_form") @db.VarChar(100) // contact_form, whatsapp, etc.
+  status    String   @default("pending") @db.VarChar(50) // pending, contacted, converted
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}

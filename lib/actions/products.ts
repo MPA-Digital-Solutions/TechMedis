@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
   createProductSchema,
@@ -65,13 +66,13 @@ export async function createProduct(
       return { success: false, error: "Ya existe un producto con este slug" };
     }
 
-    // Crear producto
+// Crear producto
     const product = await prisma.product.create({
       data: {
         ...validated,
         price: validated.price,
         costPrice: validated.costPrice,
-        metadata: validated.metadata || {},
+        metadata: (validated.metadata || {}) as object,
       },
     });
 
@@ -145,10 +146,13 @@ export async function updateProduct(
       }
     }
 
-    const { id: productId, ...updateData } = validated;
+const { id: productId, metadata, ...restUpdateData } = validated;
     await prisma.product.update({
       where: { id: productId },
-      data: updateData,
+      data: {
+        ...restUpdateData,
+        ...(metadata !== undefined && { metadata: metadata as Prisma.InputJsonValue }),
+      },
     });
 
     revalidatePath("/admin");

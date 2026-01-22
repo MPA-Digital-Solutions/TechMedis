@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductBySlug, getProducts } from "@/lib/actions/products";
+import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductDetailClient } from "./client";
 import type { Product } from "@/lib/validations/product";
 
@@ -40,7 +41,10 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const [product, whatsappNumber] = await Promise.all([
+    getProductBySlug(slug),
+    getWhatsAppNumber(),
+  ]);
 
   if (!product) {
     notFound();
@@ -57,5 +61,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
     .filter((p: Product) => p.id !== product.id)
     .slice(0, 4);
 
-  return <ProductDetailClient product={product} relatedProducts={filteredRelated} />;
+  return (
+    <ProductDetailClient 
+      product={product} 
+      relatedProducts={filteredRelated} 
+      whatsappNumber={whatsappNumber}
+    />
+  );
 }

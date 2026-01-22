@@ -1,225 +1,455 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ClipboardList, Wrench, Shield, Headphones } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { 
+  ClipboardList, 
+  Wrench, 
+  Shield, 
+  Headphones, 
+  ArrowRight, 
+  Sparkles,
+  Stethoscope,
+  Heart,
+  Award,
+  Phone
+} from "lucide-react";
 import { CTAButton } from "@/components/cta-button";
 import { HowWeWork } from "@/components/how-we-work";
-import { PrecisionEnDetalle } from "@/components/precision-en-detalle";
 
 const services = [
-  { title: "Asesoría Técnica", icon: <ClipboardList className="w-8 h-8" />, desc: "Expertos a su disposición." },
-  { title: "Instalación", icon: <Wrench className="w-8 h-8" />, desc: "Montaje certificado y seguro." },
-  { title: "Mantenimiento", icon: <Shield className="w-8 h-8" />, desc: "Planes preventivos anuales." },
-  { title: "Soporte 24/7", icon: <Headphones className="w-8 h-8" />, desc: "Respuesta inmediata garantizada." },
+  { title: "Asesoría Técnica", icon: <ClipboardList className="w-7 h-7" />, desc: "Expertos a su disposición para guiarlo en cada decisión." },
+  { title: "Instalación Profesional", icon: <Wrench className="w-7 h-7" />, desc: "Montaje certificado con los más altos estándares." },
+  { title: "Garantía Extendida", icon: <Shield className="w-7 h-7" />, desc: "Respaldo total en cada equipo que adquiera." },
+  { title: "Soporte 24/7", icon: <Headphones className="w-7 h-7" />, desc: "Asistencia técnica cuando más lo necesite." },
+];
+
+const stats = [
+  { number: "15+", label: "Años de Experiencia" },
+  { number: "500+", label: "Clientes Satisfechos" },
+  { number: "1000+", label: "Equipos Instalados" },
+  { number: "24/7", label: "Soporte Técnico" },
 ];
 
 export default function HomePage() {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
   return (
     <>
-      {/* 1. HERO SECTION */}
-      <section className="relative min-h-screen flex items-center justify-center bg-techmedis-primary overflow-hidden py-20 md:py-32">
+      {/* 1. HERO SECTION - Completamente Rediseñado */}
+      <section 
+        ref={heroRef}
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      >
+        {/* Animated Background */}
         <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+          style={{ y: backgroundY }}
           className="absolute inset-0 z-0"
         >
-          <img 
-            src="https://images.unsplash.com/photo-1675270714610-11a5cadcc7b3" 
-            alt="Medical Equipment Hero" 
-            className="w-full h-full object-cover opacity-40"
+          <div className="absolute inset-0 bg-gradient-to-br from-techmedis-primary via-techmedis-secondary to-techmedis-primary" />
+          
+          {/* Animated Particles/Shapes */}
+          <div className="absolute inset-0 overflow-hidden">
+            <motion.div
+              animate={{ 
+                rotate: 360,
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-white/5 blur-3xl"
+            />
+            <motion.div
+              animate={{ 
+                rotate: -360,
+                scale: [1, 1.2, 1]
+              }}
+              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+              className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-techmedis-secondary/30 blur-3xl"
+            />
+            <motion.div
+              animate={{ y: [-20, 20, -20] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-white/10 blur-2xl"
+            />
+          </div>
+
+          {/* Grid Pattern Overlay */}
+          <div 
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+              backgroundSize: '60px 60px'
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-techmedis-primary via-techmedis-primary/80 to-transparent"></div>
         </motion.div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-3xl">
-            <motion.h1
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.32, ease: "easeOut" }}
-              className="text-4xl md:text-5xl font-semibold text-white mb-6 leading-tight"
-            >
-              Tecnología Médica de <br />Alta Precisión y Rendimiento
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.32, delay: 0.1, ease: "easeOut" }}
-              className="text-lg md:text-xl text-white/90 mb-10 font-normal max-w-xl leading-relaxed"
-            >
-              Proveemos soluciones integrales para instituciones de salud y centros veterinarios, respaldadas por soporte técnico especializado.
-            </motion.p>
+        {/* Content */}
+        <motion.div 
+          style={{ y: textY }}
+          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20"
+        >
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Left Column - Text */}
+            <div className="text-center lg:text-left">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8"
+              >
+                <Sparkles className="w-4 h-4 text-yellow-300" />
+                <span className="text-white/90 text-sm font-medium">Líderes en Tecnología Médica</span>
+              </motion.div>
+
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-4xl sm:text-5xl lg:text-6xl font-display text-white mb-6 leading-tight"
+              >
+                Equipamiento Médico de{" "}
+                <span className="relative">
+                  <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-white">
+                    marcas líderes
+                  </span>
+                  <motion.span
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 0.8, delay: 0.8 }}
+                    className="absolute bottom-2 left-0 h-3 bg-white/20 -z-0"
+                  />
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-lg sm:text-xl text-white/80 mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0"
+              >
+                Proveemos equipos médicos y soluciones de imágenes de alta calidad
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              >
+                <Link 
+                  href="/contacto"
+                  className="group inline-flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl"
+                >
+                  <Phone className="w-5 h-5" />
+                  Solicitar Asesoría
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <button 
+                  onClick={() => {
+                    document.getElementById('catalogo-section')?.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }}
+                  className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-all cursor-pointer"
+                >
+                  Ver Catálogo
+                </button>
+              </motion.div>
+            </div>
+
+            {/* Right Column - Feature Cards */}
             <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.32, delay: 0.2, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="hidden lg:grid grid-cols-2 gap-4"
             >
-              <CTAButton variant="primary" to="/contacto">
-                Consultar con un asesor
-              </CTAButton>
-              <CTAButton variant="outline" to="/equipamientos-clinicos">
-                Ver equipamiento
-              </CTAButton>
+              {/* Feature Card 1 */}
+              <motion.div 
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 col-span-2"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-blue-500/20 rounded-xl">
+                    <Stethoscope className="w-8 h-8 text-blue-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg mb-1">Equipamiento Clínico</h3>
+                    <p className="text-white/70 text-sm">Tecnología de punta para diagnóstico y tratamiento en instituciones de salud.</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Feature Card 2 */}
+              <motion.div 
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6"
+              >
+                <div className="p-3 bg-emerald-500/20 rounded-xl w-fit mb-3">
+                  <Heart className="w-6 h-6 text-emerald-300" />
+                </div>
+                <h3 className="text-white font-bold mb-1">Veterinario</h3>
+                <p className="text-white/70 text-sm">Equipos especializados para el cuidado animal.</p>
+              </motion.div>
+
+              {/* Feature Card 3 */}
+              <motion.div 
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6"
+              >
+                <div className="p-3 bg-amber-500/20 rounded-xl w-fit mb-3">
+                  <Award className="w-6 h-6 text-amber-300" />
+                </div>
+                <h3 className="text-white font-bold mb-1">Certificados</h3>
+                <p className="text-white/70 text-sm">Calidad garantizada con estándares internacionales.</p>
+              </motion.div>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2"
+          >
+            <motion.div className="w-1.5 h-3 bg-white/60 rounded-full" />
+          </motion.div>
+        </motion.div>
       </section>
 
-      {/* 2. PRECISIÓN EN DETALLE */}
-      <PrecisionEnDetalle />
-
-      {/* 3. CÓMO TRABAJAMOS */}
-      <HowWeWork />
-
-      {/* 4. EQUIPAMIENTO PREVIEW */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Card 1 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="group cursor-pointer"
-            >
-              <div className="overflow-hidden rounded-lg mb-6 shadow-sm border border-gray-100 aspect-[16/10]">
-                <img 
-                  src="https://images.unsplash.com/photo-1565647946321-a146ac24a220" 
-                  alt="Equipamiento Clínico" 
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-semibold text-techmedis-primary mb-3">
-                Equipamiento Clínico
-              </h3>
-              <p className="text-techmedis-text mb-6 text-lg font-light">
-                Soluciones integrales para hospitales y centros de diagnóstico.
-              </p>
-              <Link href="/equipamientos-clinicos">
-                <CTAButton variant="primary" className="opacity-90 hover:opacity-100">
-                  Consultar
-                </CTAButton>
-              </Link>
-            </motion.div>
-
-            {/* Card 2 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-              className="group cursor-pointer"
-            >
-              <div className="overflow-hidden rounded-lg mb-6 shadow-sm border border-gray-100 aspect-[16/10]">
-                <img 
-                  src="https://images.unsplash.com/photo-1691934338662-2ce7f3134f36" 
-                  alt="Equipamiento Veterinario" 
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-              <h3 className="text-2xl md:text-3xl font-semibold text-techmedis-primary mb-3">
-                Equipamiento Veterinario
-              </h3>
-              <p className="text-techmedis-text mb-6 text-lg font-light">
-                Tecnología especializada para el cuidado animal avanzado.
-              </p>
-              <Link href="/equipamiento-veterinario">
-                <CTAButton variant="primary" className="opacity-90 hover:opacity-100">
-                  Consultar
-                </CTAButton>
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SERVICIOS */}
-      <section className="py-16 md:py-24 bg-techmedis-secondary text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 12 }}
+      {/* 2. STATS SECTION - Nueva */}
+      <section className="py-16 bg-white relative z-10 -mt-20">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-16 md:mb-20 text-center md:text-left"
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 md:p-12"
           >
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Servicios Integrales</h2>
-            <p className="text-lg text-white/80 font-light max-w-2xl">Acompañamiento profesional en cada etapa del ciclo de vida de su equipamiento.</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="text-center"
+                >
+                  <span className="block text-4xl md:text-5xl font-bold text-techmedis-primary mb-2">
+                    {stat.number}
+                  </span>
+                  <span className="text-sm text-techmedis-text/70 font-medium">
+                    {stat.label}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        </div>
+      </section>
+
+      {/* 3. CATEGORÍAS SECTION - Rediseñada */}
+      <section id="catalogo-section" className="py-20 md:py-28 bg-techmedis-light scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block text-techmedis-secondary font-semibold text-sm uppercase tracking-wider mb-4">
+              Nuestro Catálogo
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display text-techmedis-primary mb-4">
+              Equipamiento Especializado
+            </h2>
+            <p className="text-lg text-techmedis-text/80 max-w-2xl mx-auto">
+              Soluciones tecnológicas diseñadas para cada necesidad médica y veterinaria
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Card Clínico */}
+            <motion.div 
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500"
+            >
+              <div className="aspect-[16/10] overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1516549655169-df83a0774514" 
+                  alt="Equipamiento Clínico" 
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-techmedis-primary/90 via-techmedis-primary/40 to-transparent" />
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <Stethoscope className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Instituciones de Salud</span>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  Equipamiento Clínico
+                </h3>
+                <p className="text-white/80 mb-6 line-clamp-2">
+                  Tecnología avanzada para diagnóstico, monitoreo y tratamiento en hospitales y clínicas.
+                </p>
+                <Link 
+                  href="/equipamientos-clinicos"
+                  className="inline-flex items-center gap-2 bg-white text-techmedis-primary font-semibold px-6 py-3 rounded-xl hover:bg-white/90 transition-all group/btn"
+                >
+                  Explorar Catálogo
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Card Veterinario */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500"
+            >
+              <div className="aspect-[16/10] overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def" 
+                  alt="Equipamiento Veterinario" 
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-teal-600/90 via-teal-600/40 to-transparent" />
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-8">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <Heart className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Centros Veterinarios</span>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                  Equipamiento Veterinario
+                </h3>
+                <p className="text-white/80 mb-6 line-clamp-2">
+                  Equipos especializados para el cuidado y diagnóstico animal de alta calidad.
+                </p>
+                <Link 
+                  href="/equipamiento-veterinario"
+                  className="inline-flex items-center gap-2 bg-white text-teal-600 font-semibold px-6 py-3 rounded-xl hover:bg-white/90 transition-all group/btn"
+                >
+                  Explorar Catálogo
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. CÓMO TRABAJAMOS */}
+      <HowWeWork />
+
+      {/* 5. SERVICIOS */}
+      <section className="py-20 md:py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block text-techmedis-secondary font-semibold text-sm uppercase tracking-wider mb-4">
+              Nuestros Servicios
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display text-techmedis-primary mb-4">
+              Acompañamiento Integral
+            </h2>
+            <p className="text-lg text-techmedis-text/80 max-w-2xl mx-auto">
+              Más que proveedores, somos socios estratégicos en su operación
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.32, delay: index * 0.1, ease: "easeOut" }}
-                className="bg-white/10 backdrop-blur-sm p-8 rounded-lg border border-white/20 hover:bg-white/20 transition-all group"
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="group bg-techmedis-light rounded-2xl p-8 hover:bg-techmedis-primary transition-all duration-500 cursor-pointer"
               >
-                <div className="text-white mb-6 group-hover:scale-110 transition-transform duration-300 origin-left">
+                <div className="text-techmedis-primary group-hover:text-white mb-6 transition-colors duration-500">
                   {service.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{service.title}</h3>
-                <p className="text-sm text-white/80 leading-relaxed">{service.desc}</p>
+                <h3 className="text-lg font-bold text-techmedis-primary group-hover:text-white mb-3 transition-colors duration-500">
+                  {service.title}
+                </h3>
+                <p className="text-sm text-techmedis-text/70 group-hover:text-white/80 leading-relaxed transition-colors duration-500">
+                  {service.desc}
+                </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 6. SOBRE NOSOTROS */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-             <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2 className="text-3xl md:text-4xl font-semibold text-techmedis-primary mb-8">Respaldo Institucional</h2>
-              <div className="space-y-6 text-lg text-techmedis-text font-light leading-relaxed">
-                <p>
-                  Más de una década brindando soluciones tecnológicas de alta gama. Nos dedicamos a elevar los estándares de atención médica a través de equipamiento confiable.
-                </p>
-                <p>
-                  Nuestro compromiso va más allá de la venta; construimos relaciones duraderas basadas en la confianza y el soporte técnico de excelencia.
-                </p>
-              </div>
-              <div className="mt-10">
-                 <CTAButton variant="primary" to="/sobre-nosotros">
-                  Conocer más
-                </CTAButton>
-              </div>
-            </motion.div>
+      {/* 6. CTA FINAL */}
+      <section className="py-20 md:py-28 bg-gradient-to-br from-techmedis-primary via-techmedis-secondary to-techmedis-primary relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl" />
+          <div className="absolute -bottom-1/2 -left-1/4 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl" />
+        </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="grid grid-cols-2 gap-8"
-            >
-              <div className="bg-white p-8 rounded-lg text-center shadow-sm">
-                <span className="block text-5xl font-bold text-techmedis-secondary mb-2">15+</span>
-                <span className="text-xs font-semibold text-techmedis-text uppercase tracking-widest">Años Experiencia</span>
-              </div>
-              <div className="bg-white p-8 rounded-lg text-center shadow-sm">
-                <span className="block text-5xl font-bold text-techmedis-secondary mb-2">500+</span>
-                <span className="text-xs font-semibold text-techmedis-text uppercase tracking-widest">Clientes</span>
-              </div>
-              <div className="bg-white p-8 rounded-lg text-center shadow-sm">
-                <span className="block text-5xl font-bold text-techmedis-secondary mb-2">24/7</span>
-                <span className="text-xs font-semibold text-techmedis-text uppercase tracking-widest">Soporte</span>
-              </div>
-              <div className="bg-white p-8 rounded-lg text-center flex items-center justify-center shadow-sm">
-                <span className="text-xl font-semibold text-techmedis-primary italic">&quot;Calidad Certificada&quot;</span>
-              </div>
-            </motion.div>
-          </div>
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display text-white mb-6">
+              ¿Listo para modernizar su institución?
+            </h2>
+            <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+              Nuestro equipo de expertos está listo para asesorarlo y encontrar la solución perfecta para sus necesidades.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton variant="outline" to="/contacto">
+                <span className="flex items-center gap-2">
+                  <Phone className="w-5 h-5" />
+                  Contactar Ahora
+                </span>
+              </CTAButton>
+              <CTAButton variant="secondary" to="/sobre-nosotros">
+                Conocer Más
+              </CTAButton>
+            </div>
+          </motion.div>
         </div>
       </section>
     </>

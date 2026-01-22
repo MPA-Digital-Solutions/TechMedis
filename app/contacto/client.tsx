@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Send } from "lucide-react";
-import { CTAButton } from "@/components/cta-button";
+import { Phone, Mail, MapPin, Send, MessageCircle } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { createClient } from "@/lib/actions/clients";
+
+interface ContactoClientProps {
+  whatsappNumber: string;
+}
 
 const contactInfo = [
   { icon: <Phone size={24} />, label: "+1 (555) 123-4567" },
@@ -12,7 +16,7 @@ const contactInfo = [
   { icon: <MapPin size={24} />, label: "Av. Principal 123, Ciudad" },
 ];
 
-export default function ContactoClient() {
+export default function ContactoClient({ whatsappNumber }: ContactoClientProps) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,15 +47,57 @@ export default function ContactoClient() {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      toast({
-        title: "Mensaje Enviado",
-        description: "Un asesor se pondrá en contacto con usted a la brevedad.",
+    
+    try {
+      // Save contact to database
+      const result = await createClient({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        company: formData.company,
+        message: formData.message,
+        source: "contact_form",
       });
-      setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+
+      if (result.success) {
+        toast({
+          title: "Mensaje Enviado",
+          description: "Redirigiendo a WhatsApp para continuar la conversación...",
+        });
+
+        // Build WhatsApp message
+        const whatsappMessage = encodeURIComponent(
+          `Hola! Soy ${formData.name}${formData.company ? ` de ${formData.company}` : ""}.\n\n${formData.message}\n\nMi contacto:\nEmail: ${formData.email}\nTeléfono: ${formData.phone}`
+        );
+        const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+        // Clear form
+        setFormData({ name: "", email: "", phone: "", company: "", message: "" });
+
+        // Redirect to WhatsApp after a short delay
+        setTimeout(() => {
+          window.open(whatsappLink, "_blank");
+        }, 1000);
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "No se pudo enviar el mensaje. Intente nuevamente.",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al enviar el mensaje.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
+
+  // Direct WhatsApp link for quick contact
+  const quickWhatsAppLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hola! Me gustaría recibir más información sobre sus productos y servicios.")}`;
 
   return (
     <section className="py-24 md:py-32 bg-white">
@@ -77,6 +123,17 @@ export default function ContactoClient() {
                 </div>
               ))}
             </div>
+
+            {/* Quick WhatsApp Button */}
+            <a
+              href={quickWhatsAppLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-6 py-4 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
+            >
+              <MessageCircle className="w-6 h-6" />
+              Contactar por WhatsApp directamente
+            </a>
 
             <div className="bg-techmedis-light p-8 rounded-lg border border-gray-100">
               <h3 className="text-lg font-bold text-techmedis-primary mb-4">Horario de Atención</h3>
@@ -179,11 +236,14 @@ export default function ContactoClient() {
                     <span>Enviando...</span>
                   ) : (
                     <>
-                      <span>Consultar con un asesor</span>
+                      <span>Enviar y continuar por WhatsApp</span>
                       <Send size={20} />
                     </>
                   )}
                 </button>
+                <p className="text-xs text-gray-500 text-center mt-3">
+                  Al enviar, guardaremos tu consulta y te redirigiremos a WhatsApp para continuar
+                </p>
               </div>
             </form>
           </motion.div>

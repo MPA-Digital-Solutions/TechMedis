@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -9,9 +11,18 @@ import {
   ArrowLeft,
   Search,
   Filter,
+  LogOut,
+  Settings,
+  Save,
+  Loader2,
+  Users,
 } from "lucide-react";
 import { ProductsTable } from "./products-table";
+import { ClientsTable } from "./clients-table";
 import { ProductForm } from "./product-form";
+import { logoutAdmin } from "@/lib/actions/auth";
+import { setConfig } from "@/lib/actions/config";
+import { useToast } from "@/components/ui/use-toast";
 import {
   CATEGORIES,
   CATEGORY_LABELS,
@@ -21,15 +32,66 @@ import {
 
 interface AdminDashboardProps {
   initialProducts: Product[];
+  initialConfig?: Record<string, string>;
+  initialClients?: Array<{
+    id: string;
+    name: string;
+    email: string | null;
+    phone: string | null;
+    company: string | null;
+    message: string;
+    source: string;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }>;
 }
 
-export function AdminDashboard({ initialProducts }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "productos">(
-    "productos"
-  );
+type TabType = "dashboard" | "productos" | "clientes" | "configuracion";
+
+export function AdminDashboard({ initialProducts, initialConfig = {}, initialClients = [] }: AdminDashboardProps) {
+  const [activeTab, setActiveTab] = useState<TabType>("productos");
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<Category | "all">("all");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isSavingConfig, setIsSavingConfig] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState(initialConfig.whatsapp_number || "");
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await logoutAdmin();
+    router.refresh();
+  };
+
+  const handleSaveConfig = async () => {
+    setIsSavingConfig(true);
+    try {
+      const result = await setConfig("whatsapp_number", whatsappNumber);
+      if (result.success) {
+        toast({
+          title: "Configuración guardada",
+          description: "El número de WhatsApp se ha actualizado correctamente.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "No se pudo guardar la configuración.",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al guardar la configuración.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingConfig(false);
+    }
+  };
 
   // Filtrar productos
   const filteredProducts = initialProducts.filter((product) => {
@@ -62,18 +124,37 @@ export function AdminDashboard({ initialProducts }: AdminDashboardProps) {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-techmedis-primary text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold">Techmedis Admin</h1>
+              <Link href="/">
+                <Image 
+                  src="/images/logo.png" 
+                  alt="Techmedis" 
+                  width={140}
+                  height={48}
+                  className="h-12 w-auto"
+                />
+              </Link>
+              <span className="text-white/60 text-sm hidden sm:block">Panel de Administración</span>
             </div>
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Volver al sitio
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors cursor-pointer text-sm"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Volver al sitio</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-100 rounded-lg transition-colors cursor-pointer disabled:opacity-50 text-sm"
+              >
+                <LogOut className="w-4 h-4" />
+                <span className="hidden sm:inline">{isLoggingOut ? "Saliendo..." : "Cerrar Sesión"}</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -103,6 +184,28 @@ export function AdminDashboard({ initialProducts }: AdminDashboardProps) {
             >
               <Package className="w-5 h-5" />
               Productos
+            </button>
+            <button
+              onClick={() => setActiveTab("clientes")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${
+                activeTab === "clientes"
+                  ? "bg-techmedis-primary text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              <Users className="w-5 h-5" />
+              Clientes
+            </button>
+            <button
+              onClick={() => setActiveTab("configuracion")}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${
+                activeTab === "configuracion"
+                  ? "bg-techmedis-primary text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              <Settings className="w-5 h-5" />
+              Configuración
             </button>
           </nav>
         </aside>
@@ -179,6 +282,80 @@ export function AdminDashboard({ initialProducts }: AdminDashboardProps) {
               </div>
 
               <ProductsTable products={filteredProducts} />
+            </div>
+          )}
+
+           {activeTab === "clientes" && (
+            <div>
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Consultas de Clientes
+                  </h2>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Gestiona todas las consultas recibidas a través del formulario de contacto
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-3xl font-bold text-techmedis-primary">
+                    {initialClients.length}
+                  </p>
+                  <p className="text-gray-500 text-sm">Consultas totales</p>
+                </div>
+              </div>
+
+              <ClientsTable clients={initialClients} />
+            </div>
+          )}
+
+           {activeTab === "configuracion" && (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-8">
+                Configuración
+              </h2>
+              
+              {/* WhatsApp Config */}
+              <div className="bg-white rounded-xl border border-gray-200 p-6 max-w-2xl">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Contacto WhatsApp
+                </h3>
+                <p className="text-sm text-gray-500 mb-4">
+                  Este número se usará para los botones de contacto en toda la web. 
+                  Los clientes serán redirigidos a este WhatsApp al hacer clic en &quot;Contactar&quot;.
+                </p>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Número de WhatsApp
+                    </label>
+                    <div className="flex gap-3">
+                      <input
+                        type="text"
+                        value={whatsappNumber}
+                        onChange={(e) => setWhatsappNumber(e.target.value)}
+                        placeholder="Ej: 5491112345678"
+                        className="flex-1 px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all"
+                      />
+                      <button
+                        onClick={handleSaveConfig}
+                        disabled={isSavingConfig}
+                        className="flex items-center gap-2 px-6 py-3 bg-techmedis-primary text-white rounded-lg hover:bg-techmedis-primary/90 transition-colors cursor-pointer disabled:opacity-50"
+                      >
+                        {isSavingConfig ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <Save className="w-5 h-5" />
+                        )}
+                        Guardar
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Formato: código de país + número sin espacios ni guiones (ej: 5491112345678)
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </main>

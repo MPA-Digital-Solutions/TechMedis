@@ -37,7 +37,7 @@ export function HowWeWork() {
           transition={{ duration: 0.32, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+<h2 className="text-3xl md:text-4xl font-display text-white mb-4">
             Cómo trabajamos
           </h2>
         </motion.div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getProducts } from "@/lib/actions/products";
+import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function EquiposClinicosPage() {
-  const products = await getProducts({ category: "clinico", status: "active" });
+  const [products, whatsappNumber] = await Promise.all([
+    getProducts({ category: "clinico", status: "active" }),
+    getWhatsAppNumber(),
+  ]);
 
   return (
     <>
@@ -44,6 +48,7 @@ export default async function EquiposClinicosPage() {
           <ProductsGrid 
             products={products} 
             emptyMessage="No hay equipamientos clínicos disponibles en este momento."
+            whatsappNumber={whatsappNumber}
           />
         </div>
       </section>
