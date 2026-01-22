@@ -77,6 +77,7 @@ export async function createProduct(
     });
 
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/equipamientos-clinicos");
     revalidatePath("/equipamiento-veterinario");
 
@@ -156,6 +157,7 @@ const { id: productId, metadata, ...restUpdateData } = validated;
     });
 
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/equipamientos-clinicos");
     revalidatePath("/equipamiento-veterinario");
     revalidatePath(`/productos/${validated.slug}`);
@@ -187,6 +189,7 @@ export async function deleteProduct(id: string): Promise<ActionResponse> {
     });
 
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/equipamientos-clinicos");
     revalidatePath("/equipamiento-veterinario");
 
@@ -319,6 +322,7 @@ export async function toggleProductStatus(
     });
 
     revalidatePath("/admin");
+    revalidatePath("/");
     revalidatePath("/equipamientos-clinicos");
     revalidatePath("/equipamiento-veterinario");
 

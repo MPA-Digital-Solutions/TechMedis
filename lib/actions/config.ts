@@ -9,12 +9,26 @@ type ActionResponse<T = unknown> = {
   error?: string;
 };
 
+// Timeout para queries de BD (10 segundos)
+const QUERY_TIMEOUT = 10000;
+
+// Helper para ejecutar queries con timeout
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  const timeout = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error("Query timeout")), ms);
+  });
+  return Promise.race([promise, timeout]);
+}
+
 // ==================== GET CONFIG ====================
 export async function getConfig(key: string): Promise<string | null> {
   try {
-    const config = await (prisma as any).config.findUnique({
-      where: { key },
-    });
+    const config = await withTimeout<{ value: string } | null>(
+      (prisma as any).config.findUnique({
+        where: { key },
+      }),
+      QUERY_TIMEOUT
+    );
     return config?.value || null;
   } catch (error) {
     console.error("Error getting config:", error);
@@ -25,8 +39,11 @@ export async function getConfig(key: string): Promise<string | null> {
 // ==================== GET ALL CONFIGS ====================
 export async function getAllConfigs(): Promise<Record<string, string>> {
   try {
-    const configs = await (prisma as any).config.findMany();
-    return configs.reduce((acc: Record<string, string>, config: any) => {
+    const configs = await withTimeout<Array<{ key: string; value: string }>>(
+      (prisma as any).config.findMany(),
+      QUERY_TIMEOUT
+    );
+    return configs.reduce((acc: Record<string, string>, config) => {
       acc[config.key] = config.value;
       return acc;
     }, {} as Record<string, string>);
@@ -42,13 +59,18 @@ export async function setConfig(
   value: string
 ): Promise<ActionResponse> {
   try {
-    await (prisma as any).config.upsert({
-      where: { key },
-      update: { value },
-      create: { key, value },
-    });
+    await withTimeout(
+      (prisma as any).config.upsert({
+        where: { key },
+        update: { value },
+        create: { key, value },
+      }),
+      QUERY_TIMEOUT
+    );
 
     revalidatePath("/admin");
+    revalidatePath("/");
+    revalidatePath("/contacto");
     return { success: true };
   } catch (error) {
     console.error("Error setting config:", error);
@@ -60,7 +82,14 @@ export async function setConfig(
 }
 
 // ==================== GET WHATSAPP NUMBER ====================
+// Retorna valor por defecto si hay error de BD
 export async function getWhatsAppNumber(): Promise<string> {
-  const number = await getConfig("whatsapp_number");
-  return number || "5491112345678";
+  try {
+    const number = await getConfig("whatsapp_number");
+    return number || "5491112345678";
+  } catch (error) {
+    console.error("Error getting WhatsApp number:", error);
+    // Fallback en caso de error de conexión
+    return "5491112345678";
+  }
 }

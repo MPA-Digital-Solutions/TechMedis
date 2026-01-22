@@ -5,7 +5,8 @@ import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductDetailClient } from "./client";
 import type { Product } from "@/lib/validations/product";
 
-export const dynamic = "force-dynamic";
+// ISR: Regenerar página cada 5 minutos (300 segundos)
+export const revalidate = 300;
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;

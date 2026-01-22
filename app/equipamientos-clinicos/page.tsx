@@ -3,7 +3,8 @@ import { getProducts } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
 
-export const dynamic = "force-dynamic";
+// ISR: Regenerar página cada 5 minutos (300 segundos)
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Equipamientos Clínicos - Techmedis",
