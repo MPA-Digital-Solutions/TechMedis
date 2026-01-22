@@ -28,49 +28,20 @@ export function ProductsGrid({ products, emptyMessage = "No hay productos dispon
     );
   }
 
-  // Dynamic grid: max 2 per row, centered
-  const isSingleProduct = products.length === 1;
-  const isOddCount = products.length % 2 !== 0;
-
+  // Layout: Un producto por fila, centrado, máximo ancho
   return (
-    <div className="flex flex-col items-center gap-8">
-      {/* Main grid: 2 columns max */}
-      <div className={`grid gap-8 w-full ${
-        isSingleProduct 
-          ? 'grid-cols-1 max-w-xl mx-auto' 
-          : 'grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto'
-      }`}>
-        {products.map((product, index) => {
-          // If odd count, skip last item here (we'll render it centered below)
-          if (isOddCount && !isSingleProduct && index === products.length - 1) {
-            return null;
-          }
-          
-          return (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-            >
-              <ProductCard product={product} whatsappNumber={whatsappNumber} />
-            </motion.div>
-          );
-        })}
-      </div>
-      
-      {/* Last item centered if odd count (and more than 1 product) */}
-      {isOddCount && !isSingleProduct && (
-        <div className="w-full max-w-xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: (products.length - 1) * 0.1, ease: "easeOut" }}
-          >
-            <ProductCard product={products[products.length - 1]} whatsappNumber={whatsappNumber} />
-          </motion.div>
-        </div>
-      )}
+    <div className="flex flex-col items-center gap-10 max-w-4xl mx-auto">
+      {products.map((product, index) => (
+        <motion.div
+          key={product.id}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+          className="w-full"
+        >
+          <ProductCard product={product} whatsappNumber={whatsappNumber} />
+        </motion.div>
+      ))}
     </div>
   );
 }

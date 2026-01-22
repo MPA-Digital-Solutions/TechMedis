@@ -19,9 +19,6 @@ interface PrismaProductRaw {
   name: string;
   slug: string;
   description: string;
-  price: { toNumber(): number } | number;
-  costPrice: { toNumber(): number } | number;
-  stock: number;
   status: string;
   category: string;
   image: string | null;
@@ -70,8 +67,6 @@ export async function createProduct(
     const product = await prisma.product.create({
       data: {
         ...validated,
-        price: validated.price,
-        costPrice: validated.costPrice,
         metadata: (validated.metadata || {}) as object,
       },
     });
@@ -103,32 +98,33 @@ export async function updateProduct(
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
       description: formData.get("description") as string,
-      price: Number(formData.get("price")),
-      costPrice: Number(formData.get("costPrice")),
-      stock: Number(formData.get("stock")),
-      status: formData.get("status") as "active" | "inactive" | "out_of_stock",
+      status: formData.get("status") as "active" | "inactive",
       category: formData.get("category") as "clinico" | "veterinario",
     };
 
     const imageFile = formData.get("image") as File | null;
     const keepCurrentImage = formData.get("keepCurrentImage") === "true";
     
-    if (imageFile && imageFile.size > 0) {
+    // Una sola query para obtener la imagen actual (si es necesario)
+    const needsImageCheck = (imageFile && imageFile.size > 0) || !keepCurrentImage;
+    let currentImage: string | null = null;
+    
+    if (needsImageCheck) {
       const currentProduct = await prisma.product.findUnique({
         where: { id },
         select: { image: true },
       });
-      if (currentProduct?.image) {
-        await deleteImage(currentProduct.image);
+      currentImage = currentProduct?.image || null;
+    }
+    
+    if (imageFile && imageFile.size > 0) {
+      if (currentImage) {
+        await deleteImage(currentImage);
       }
       rawData.image = await saveImage(imageFile);
     } else if (!keepCurrentImage) {
-      const currentProduct = await prisma.product.findUnique({
-        where: { id },
-        select: { image: true },
-      });
-      if (currentProduct?.image) {
-        await deleteImage(currentProduct.image);
+      if (currentImage) {
+        await deleteImage(currentImage);
       }
       rawData.image = null;
     }
@@ -229,8 +225,6 @@ export async function getProducts(options?: {
 
     return products.map((p: PrismaProductRaw) => ({
       ...p,
-      price: Number(p.price),
-      costPrice: Number(p.costPrice),
       metadata: p.metadata as Record<string, unknown>,
     }));
   } catch (error) {
@@ -249,8 +243,6 @@ export async function getProductBySlug(slug: string) {
 
     return {
       ...product,
-      price: Number(product.price),
-      costPrice: Number(product.costPrice),
       metadata: product.metadata as Record<string, unknown>,
     };
   } catch (error) {
@@ -269,8 +261,6 @@ export async function getProductById(id: string) {
 
     return {
       ...product,
-      price: Number(product.price),
-      costPrice: Number(product.costPrice),
       metadata: product.metadata as Record<string, unknown>,
     };
   } catch (error) {

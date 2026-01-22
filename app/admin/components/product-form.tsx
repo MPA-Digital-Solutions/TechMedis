@@ -33,9 +33,6 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     name: product?.name || "",
     slug: product?.slug || "",
     description: product?.description || "",
-    price: product?.price?.toString() || "",
-    costPrice: product?.costPrice?.toString() || "",
-    stock: product?.stock?.toString() || "0",
     status: product?.status || "active",
     category: product?.category || "clinico",
   });
@@ -177,63 +174,6 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all resize-none"
               placeholder="Descripción detallada del producto..."
             />
-          </div>
-
-          {/* Precios y Stock */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Precio (USD) *
-              </label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, price: e.target.value }))
-                }
-                required
-                min="0"
-                step="0.01"
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all"
-                placeholder="0.00"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Costo (USD) *
-              </label>
-              <input
-                type="number"
-                name="costPrice"
-                value={formData.costPrice}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, costPrice: e.target.value }))
-                }
-                required
-                min="0"
-                step="0.01"
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all"
-                placeholder="0.00"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Stock *
-              </label>
-              <input
-                type="number"
-                name="stock"
-                value={formData.stock}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, stock: e.target.value }))
-                }
-                required
-                min="0"
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all"
-                placeholder="0"
-              />
-            </div>
           </div>
 
           {/* Categoría y Estado */}

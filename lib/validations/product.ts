@@ -8,13 +8,12 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   veterinario: "Veterinario",
 };
 
-export const STATUS_OPTIONS = ["active", "inactive", "out_of_stock"] as const;
+export const STATUS_OPTIONS = ["active", "inactive"] as const;
 export type ProductStatus = (typeof STATUS_OPTIONS)[number];
 
 export const STATUS_LABELS: Record<ProductStatus, string> = {
   active: "Activo",
   inactive: "Inactivo",
-  out_of_stock: "Sin Stock",
 };
 
 export const createProductSchema = z.object({
@@ -25,9 +24,6 @@ export const createProductSchema = z.object({
     .max(255)
     .regex(/^[a-z0-9-]+$/, "El slug solo puede contener letras minúsculas, números y guiones"),
   description: z.string().min(1, "La descripción es requerida"),
-  price: z.coerce.number().min(0, "El precio debe ser mayor o igual a 0"),
-  costPrice: z.coerce.number().min(0, "El costo debe ser mayor o igual a 0"),
-  stock: z.coerce.number().int().min(0, "El stock debe ser mayor o igual a 0"),
   status: z.enum(STATUS_OPTIONS),
   category: z.enum(CATEGORIES, {
     errorMap: () => ({ message: "Categoría inválida" }),
@@ -48,9 +44,6 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
-  price: number;
-  costPrice: number;
-  stock: number;
   status: string;
   category: string;
   image: string | null;

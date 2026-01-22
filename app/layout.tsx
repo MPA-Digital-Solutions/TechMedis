@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
+import { WhatsAppButton } from "@/components/whatsapp-button";
 import "@/app/globals.css";
 
 export default function RootLayout({
@@ -30,6 +31,7 @@ export default function RootLayout({
             </main>
             <Footer />
             <Toaster />
+            <WhatsAppButton />
           </div>
         )}
       </body>

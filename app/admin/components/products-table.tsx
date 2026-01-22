@@ -67,8 +67,6 @@ export function ProductsTable({ products }: ProductsTableProps) {
         return "bg-green-100 text-green-800";
       case "inactive":
         return "bg-gray-100 text-gray-800";
-      case "out_of_stock":
-        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -103,12 +101,6 @@ export function ProductsTable({ products }: ProductsTableProps) {
                 </th>
                 <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
                   Categoría
-                </th>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
-                  Precio
-                </th>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
-                  Stock
                 </th>
                 <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
                   Estado
@@ -154,21 +146,6 @@ export function ProductsTable({ products }: ProductsTableProps) {
                       className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(product.category)}`}
                     >
                       {CATEGORY_LABELS[product.category as Category]}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-semibold text-gray-900">
-                      ${product.price.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Costo: ${product.costPrice.toLocaleString()}
-                    </p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`font-medium ${product.stock > 0 ? "text-green-600" : "text-red-600"}`}
-                    >
-                      {product.stock} unidades
                     </span>
                   </td>
                   <td className="px-6 py-4">

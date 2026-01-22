@@ -84,12 +84,6 @@ export async function setConfig(
 // ==================== GET WHATSAPP NUMBER ====================
 // Retorna valor por defecto si hay error de BD
 export async function getWhatsAppNumber(): Promise<string> {
-  try {
-    const number = await getConfig("whatsapp_number");
-    return number || "5491112345678";
-  } catch (error) {
-    console.error("Error getting WhatsApp number:", error);
-    // Fallback en caso de error de conexión
-    return "5491112345678";
-  }
+  const number = await getConfig("whatsapp_number");
+  return number || "5491112345678";
 }

@@ -13,10 +13,7 @@ model Product {
   name        String   @db.VarChar(255)
   slug        String   @unique @db.VarChar(255)
   description String   @db.Text
-  price       Decimal  @db.Decimal(10, 2)
-  costPrice   Decimal  @db.Decimal(10, 2)
-  stock       Int      @default(0)
-  status      String   @default("active") @db.VarChar(50)
+  status      String   @default("active") @db.VarChar(50) // Valores: "active", "inactive"
   category    String   @db.VarChar(100) // Valores permitidos: "clinico", "veterinario"
   image       String?  @db.VarChar(255) // Ruta a la imagen en carpeta public
   
@@ -26,6 +23,7 @@ model Product {
   
   @@index([category])
   @@index([status])
+  @@index([category, status])
 }
 
 model Config {

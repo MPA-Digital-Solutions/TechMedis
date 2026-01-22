@@ -44,46 +44,37 @@ export default function HomePage() {
 
   return (
     <>
-      {/* 1. HERO SECTION - Completamente Rediseñado */}
+      {/* 1. HERO SECTION - Con imagen de fondo + blur azul */}
       <section 
         ref={heroRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* Animated Background */}
+        {/* Background Image */}
         <motion.div 
           style={{ y: backgroundY }}
           className="absolute inset-0 z-0"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-techmedis-primary via-techmedis-secondary to-techmedis-primary" />
+          {/* Imagen de fondo */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/images/font-home.jpg')" }}
+          />
           
-          {/* Animated Particles/Shapes */}
-          <div className="absolute inset-0 overflow-hidden">
-            <motion.div
-              animate={{ 
-                rotate: 360,
-                scale: [1, 1.1, 1]
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-white/5 blur-3xl"
-            />
-            <motion.div
-              animate={{ 
-                rotate: -360,
-                scale: [1, 1.2, 1]
-              }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-techmedis-secondary/30 blur-3xl"
-            />
-            <motion.div
-              animate={{ y: [-20, 20, -20] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-white/10 blur-2xl"
-            />
-          </div>
+           {/* Gradient overlay azul desde abajo izquierda - AUMENTADO MUCHO MÁS */}
+           <div className="absolute inset-0 bg-gradient-to-tr from-techmedis-primary via-techmedis-primary/75 to-techmedis-primary/30" />
+           
+           {/* Extra blur muy fuerte en toda la sección inferior - CUBRE LA MAYORÍA DE LA IMAGEN */}
+           <div className="absolute bottom-0 left-0 w-full h-4/5 bg-gradient-to-t from-techmedis-primary via-techmedis-secondary/85 to-transparent blur-3xl" />
+           
+           {/* Overlay adicional de color azul puro para dominar sobre la imagen */}
+           <div className="absolute inset-0 bg-techmedis-primary/40" />
+          
+          {/* Overlay oscuro sutil para legibilidad */}
+          <div className="absolute inset-0 bg-black/20" />
 
           {/* Grid Pattern Overlay */}
           <div 
-            className="absolute inset-0 opacity-10"
+            className="absolute inset-0 opacity-5"
             style={{
               backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
               backgroundSize: '60px 60px'
@@ -266,7 +257,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3. CATEGORÍAS SECTION - Rediseñada */}
+      {/* 3. CATEGORÍAS SECTION - Adaptado para Mobile */}
       <section id="catalogo-section" className="py-20 md:py-28 bg-techmedis-light scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -286,16 +277,17 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Cards apiladas verticalmente en mobile, lado a lado en desktop */}
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Card Clínico */}
             <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500"
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 flex-1"
             >
-              <div className="aspect-[16/10] overflow-hidden">
+              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1516549655169-df83a0774514" 
                   alt="Equipamiento Clínico" 
@@ -303,22 +295,22 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-techmedis-primary/90 via-techmedis-primary/40 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8">
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
                     <Stethoscope className="w-5 h-5 text-white" />
                   </div>
                   <span className="text-white/80 text-sm font-medium">Instituciones de Salud</span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
                   Equipamiento Clínico
                 </h3>
-                <p className="text-white/80 mb-6 line-clamp-2">
+                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
                   Tecnología avanzada para diagnóstico, monitoreo y tratamiento en hospitales y clínicas.
                 </p>
                 <Link 
                   href="/equipamientos-clinicos"
-                  className="inline-flex items-center gap-2 bg-white text-techmedis-primary font-semibold px-6 py-3 rounded-xl hover:bg-white/90 transition-all group/btn"
+                  className="inline-flex items-center gap-2 bg-white text-techmedis-primary font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
                 >
                   Explorar Catálogo
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -328,13 +320,13 @@ export default function HomePage() {
 
             {/* Card Veterinario */}
             <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500"
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 flex-1"
             >
-              <div className="aspect-[16/10] overflow-hidden">
+              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def" 
                   alt="Equipamiento Veterinario" 
@@ -342,22 +334,22 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-teal-600/90 via-teal-600/40 to-transparent" />
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8">
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
                     <Heart className="w-5 h-5 text-white" />
                   </div>
                   <span className="text-white/80 text-sm font-medium">Centros Veterinarios</span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
                   Equipamiento Veterinario
                 </h3>
-                <p className="text-white/80 mb-6 line-clamp-2">
+                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
                   Equipos especializados para el cuidado y diagnóstico animal de alta calidad.
                 </p>
                 <Link 
                   href="/equipamiento-veterinario"
-                  className="inline-flex items-center gap-2 bg-white text-teal-600 font-semibold px-6 py-3 rounded-xl hover:bg-white/90 transition-all group/btn"
+                  className="inline-flex items-center gap-2 bg-white text-teal-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
                 >
                   Explorar Catálogo
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
