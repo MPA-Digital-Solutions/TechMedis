@@ -1,0 +1,101 @@
+# ============================================
+# TechMedis - Production Dockerfile
+# ============================================
+# Multi-stage build optimizado para producción
+# Imagen final: ~150-200MB (vs ~1GB sin optimizar)
+# ============================================
+
+# ==================== STAGE 1: Dependencies ====================
+FROM node:22-alpine AS deps
+
+# Instalar dependencias del sistema para Prisma
+RUN apk add --no-cache \
+    openssl \
+    libc6-compat
+
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+COPY prisma ./prisma/
+
+# Instalar SOLO dependencias de producción
+RUN npm ci --only=production
+
+# Generar Prisma Client
+RUN npx prisma generate
+
+# ==================== STAGE 2: Builder ====================
+FROM node:22-alpine AS builder
+
+RUN apk add --no-cache \
+    openssl \
+    libc6-compat
+
+WORKDIR /app
+
+# Copiar dependencias de producción
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package*.json ./
+
+# Instalar devDependencies para build
+RUN npm install --only=development
+
+# Copiar código fuente
+COPY . .
+
+# Generar Prisma Client (necesario para build)
+RUN npx prisma generate
+
+# Build de producción
+# NOTA: Saltamos prisma db push, se hace en runtime
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+RUN npm run build -- --no-lint || npx next build
+
+# ==================== STAGE 3: Runner (Producción) ====================
+FROM node:22-alpine AS runner
+
+# Instalar dependencias mínimas del sistema
+RUN apk add --no-cache \
+    openssl \
+    libc6-compat \
+    curl
+
+WORKDIR /app
+
+# Crear usuario no-root para seguridad
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Configurar variables de entorno
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Copiar archivos necesarios desde builder
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package*.json ./
+
+# Copiar el build de Next.js (standalone mode si está habilitado)
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+
+# Crear directorio para uploads con permisos correctos
+RUN mkdir -p /app/public/uploads && chown -R nextjs:nodejs /app/public/uploads
+
+# Cambiar a usuario no-root
+USER nextjs
+
+# Puerto de producción
+EXPOSE 3000
+
+# Healthcheck para orquestadores (Docker Swarm, Kubernetes, etc.)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:3000/ || exit 1
+
+# Comando de producción
+# Primero sincroniza la BD, luego inicia el servidor
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npm start"]
