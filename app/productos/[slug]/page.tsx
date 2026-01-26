@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProductBySlug, getProducts } from "@/lib/actions/products";
+import { getProductBySlug, getProducts, getRelatedProducts } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductDetailClient } from "./client";
 import type { Product } from "@/lib/validations/product";
 
-// ISR: Regenerar página cada 5 minutos (300 segundos)
-export const revalidate = 300;
+// ISR: Regenerar página cada 24 horas (86400 segundos) - optimizado para bajo tráfico
+export const revalidate = 86400;
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -51,21 +51,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  // Obtener productos relacionados de la misma categoría
-  const relatedProducts = await getProducts({ 
-    category: product.category as "clinico" | "veterinario", 
-    status: "active" 
-  });
-  
-  // Filtrar el producto actual y limitar a 4
-  const filteredRelated = relatedProducts
-    .filter((p: Product) => p.id !== product.id)
-    .slice(0, 4);
+  // Obtener productos relacionados usando query OPTIMIZADA (solo 4 items, select específico)
+  const relatedProducts = await getRelatedProducts(
+    product.category,
+    product.id,
+    4
+  );
 
   return (
     <ProductDetailClient 
       product={product} 
-      relatedProducts={filteredRelated} 
+      relatedProducts={relatedProducts} 
       whatsappNumber={whatsappNumber}
     />
   );

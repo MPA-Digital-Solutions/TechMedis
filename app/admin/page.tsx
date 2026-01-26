@@ -14,8 +14,9 @@ export default async function AdminPage() {
     return <AdminLogin />;
   }
 
+  // Paginación: cargar solo primeros 50 productos para reducir memoria
   const [products, config, clients] = await Promise.all([
-    getProducts(),
+    getProducts({ limit: 50, offset: 0 }),
     getAllConfigs(),
     getClients(),
   ]);

@@ -201,6 +201,8 @@ export async function getProducts(options?: {
   category?: Category;
   status?: string;
   search?: string;
+  limit?: number;
+  offset?: number;
 }) {
   try {
     const where: Record<string, unknown> = {};
@@ -221,6 +223,9 @@ export async function getProducts(options?: {
     const products = await prisma.product.findMany({
       where,
       orderBy: { createdAt: "desc" },
+      // Paginación: limit por defecto 50, offset por defecto 0
+      take: options?.limit ?? 50,
+      skip: options?.offset ?? 0,
     });
 
     return products.map((p: PrismaProductRaw) => ({
@@ -229,6 +234,40 @@ export async function getProducts(options?: {
     }));
   } catch (error) {
     console.error("Error fetching products:", error);
+    return [];
+  }
+}
+
+// ==================== GET RELATED PRODUCTS (OPTIMIZADO) ====================
+// Query directa para productos relacionados, evita N+1
+export async function getRelatedProducts(
+  category: string,
+  excludeId: string,
+  limit: number = 4
+) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        category,
+        status: "active",
+        NOT: { id: excludeId },
+      },
+      take: limit,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        image: true,
+        category: true,
+        description: true,
+        status: true,
+      },
+    });
+
+    return products;
+  } catch (error) {
+    console.error("Error fetching related products:", error);
     return [];
   }
 }

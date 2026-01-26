@@ -4,10 +4,20 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Package, Tag, Check, ArrowRight } from "lucide-react";
-import type { Product } from "@/lib/validations/product";
+
+// Tipo mínimo necesario para mostrar un ProductCard
+interface ProductCardProduct {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  image: string | null;
+  status: string;
+}
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductCardProduct;
   whatsappNumber?: string;
 }
 

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import ContactoClient from "./client";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 
-// ISR: Regenerar página cada 5 minutos (300 segundos)
-export const revalidate = 300;
+// ISR: Regenerar página cada 24 horas (86400 segundos) - optimizado para bajo tráfico
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Contacto - Techmedis",

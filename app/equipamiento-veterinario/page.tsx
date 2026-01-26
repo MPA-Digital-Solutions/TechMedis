@@ -3,8 +3,8 @@ import { getProducts } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
 
-// ISR: Regenerar página cada 5 minutos (300 segundos)
-export const revalidate = 300;
+// ISR: Regenerar página cada 24 horas (86400 segundos) - optimizado para bajo tráfico
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Equipamiento Veterinario - Techmedis",

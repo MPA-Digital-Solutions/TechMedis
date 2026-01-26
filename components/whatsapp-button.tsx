@@ -3,6 +3,15 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
+// Cache key y duración (24 horas en ms)
+const CACHE_KEY = "techmedis_whatsapp_number";
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
+
+interface CachedNumber {
+  number: string;
+  timestamp: number;
+}
+
 interface WhatsAppButtonProps {
   phoneNumber?: string;
   message?: string;
@@ -15,19 +24,49 @@ export function WhatsAppButton({
   const [configuredNumber, setConfiguredNumber] = useState<string>("5491112345678");
 
   useEffect(() => {
-    // Fetch WhatsApp number from config if not provided as prop
-    if (!phoneNumber) {
-      fetch('/api/config/whatsapp')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.number) {
-            setConfiguredNumber(data.number);
-          }
-        })
-        .catch(err => {
-          console.warn('Failed to load WhatsApp config, using default:', err);
-        });
+    // Si se pasa como prop, usarlo directamente
+    if (phoneNumber) {
+      setConfiguredNumber(phoneNumber);
+      return;
     }
+
+    // Verificar localStorage primero (cache de 24 horas)
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const parsed: CachedNumber = JSON.parse(cached);
+        const isValid = Date.now() - parsed.timestamp < CACHE_DURATION;
+        
+        if (isValid && parsed.number) {
+          setConfiguredNumber(parsed.number);
+          return; // Usar cache, no hacer fetch
+        }
+      }
+    } catch {
+      // localStorage no disponible o error de parse, continuar con fetch
+    }
+
+    // Fetch desde API solo si no hay cache válido
+    fetch('/api/config/whatsapp')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.number) {
+          setConfiguredNumber(data.number);
+          // Guardar en localStorage para próximas visitas
+          try {
+            const cacheData: CachedNumber = {
+              number: data.number,
+              timestamp: Date.now()
+            };
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+          } catch {
+            // localStorage no disponible, ignorar
+          }
+        }
+      })
+      .catch(err => {
+        console.warn('Failed to load WhatsApp config, using default:', err);
+      });
   }, [phoneNumber]);
 
   const finalPhoneNumber = phoneNumber || configuredNumber;

@@ -3,10 +3,20 @@
 import { motion } from "framer-motion";
 import { ProductCard } from "@/components/product-card";
 import { Package } from "lucide-react";
-import type { Product } from "@/lib/validations/product";
+
+// Tipo mínimo necesario para mostrar ProductCard
+interface ProductGridItem {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  image: string | null;
+  status: string;
+}
 
 interface ProductsGridProps {
-  products: Product[];
+  products: ProductGridItem[];
   emptyMessage?: string;
   whatsappNumber?: string;
 }

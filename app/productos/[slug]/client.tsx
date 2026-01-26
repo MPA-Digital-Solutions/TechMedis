@@ -7,9 +7,20 @@ import { ArrowLeft, Package, Tag, CheckCircle, XCircle, Phone, MessageCircle } f
 import { ProductCard } from "@/components/product-card";
 import type { Product } from "@/lib/validations/product";
 
+// Tipo ligero para productos relacionados (solo campos necesarios para mostrar cards)
+interface RelatedProduct {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  category: string;
+  image: string | null;
+  status: string;
+}
+
 interface ProductDetailClientProps {
   product: Product;
-  relatedProducts: Product[];
+  relatedProducts: RelatedProduct[];
   whatsappNumber?: string;
 }
 
