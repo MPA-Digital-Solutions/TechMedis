@@ -1,12 +1,9 @@
-# ============================================
-# TechMedis - Docker Compose
-# ============================================
+
 # Uso desarrollo: docker-compose up -d
 # Uso producción: docker-compose --profile prod up -d
-# ============================================
+
 
 services:
-  # ==================== MySQL Database ====================
   mysql:
     image: mysql:8.0
     container_name: techmedis_mysql
@@ -29,7 +26,6 @@ services:
     networks:
       - techmedis_network
 
-  # ==================== App Development ====================
   app-dev:
     build:
       context: .
@@ -46,9 +42,7 @@ services:
       - ADMIN_USER=${ADMIN_USER:-admin}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin_pass}
     volumes:
-      # Mount source code for hot-reload
       - .:/app
-      # Prevent overwriting node_modules
       - /app/node_modules
       - /app/.next
     depends_on:
@@ -57,7 +51,6 @@ services:
     networks:
       - techmedis_network
 
-  # ==================== App Production ====================
   app:
     build:
       context: .
@@ -82,14 +75,12 @@ services:
     networks:
       - techmedis_network
 
-# ==================== Volumes ====================
 volumes:
   mysql_data:
     driver: local
   uploads_data:
     driver: local
 
-# ==================== Networks ====================
 networks:
   techmedis_network:
     driver: bridge
