@@ -1,34 +1,18 @@
-# ============================================
-# TechMedis - Development Dockerfile
-# ============================================
-# Para desarrollo local con hot-reload
-# Uso: docker-compose -f docker-compose.yml up app-dev
-# ============================================
-
 FROM node:22-alpine
 
-# Instalar dependencias del sistema necesarias para Prisma
 RUN apk add --no-cache \
     openssl \
     libc6-compat
 
 WORKDIR /app
 
-# Copiar archivos de dependencias
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Instalar dependencias (incluyendo devDependencies)
 RUN npm install
 
-# Generar Prisma Client
 RUN npx prisma generate
 
-# El código fuente se monta como volumen para hot-reload
-# No copiamos el código aquí
-
-# Puerto de desarrollo
 EXPOSE 3000
 
-# Comando para desarrollo con hot-reload
 CMD ["npm", "run", "dev"]
