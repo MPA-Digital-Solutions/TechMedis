@@ -59,6 +59,8 @@ export async function createClient(
 interface ClientFilters {
   status?: string;
   source?: string;
+  limit?: number;
+  offset?: number;
 }
 
 interface Client {
@@ -85,9 +87,12 @@ export async function getClients(filters?: ClientFilters): Promise<Client[]> {
       where.source = filters.source;
     }
 
+    // OPTIMIZADO: Paginación por defecto 50 items para reducir consumo de memoria
     const clients = await (prisma as any).client.findMany({
       where,
       orderBy: { createdAt: "desc" },
+      take: filters?.limit ?? 50,
+      skip: filters?.offset ?? 0,
     });
 
     return clients;

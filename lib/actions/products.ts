@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+// NOTA: revalidatePath REMOVIDO para optimización de procesos
+// Los cambios se reflejarán con ISR (cada 24 horas) o manualmente via /api/revalidate
 import type { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
@@ -71,10 +72,8 @@ export async function createProduct(
       },
     });
 
-    revalidatePath("/admin");
-    revalidatePath("/");
-    revalidatePath("/equipamientos-clinicos");
-    revalidatePath("/equipamiento-veterinario");
+    // ISR se encarga de la revalidación cada 24 horas
+    // Para forzar actualización inmediata usar /api/revalidate
 
     return { success: true, data: { id: product.id } };
   } catch (error) {
@@ -152,11 +151,7 @@ const { id: productId, metadata, ...restUpdateData } = validated;
       },
     });
 
-    revalidatePath("/admin");
-    revalidatePath("/");
-    revalidatePath("/equipamientos-clinicos");
-    revalidatePath("/equipamiento-veterinario");
-    revalidatePath(`/productos/${validated.slug}`);
+    // ISR se encarga de la revalidación cada 24 horas
 
     return { success: true, data: { id: productId } };
   } catch (error) {
@@ -184,10 +179,7 @@ export async function deleteProduct(id: string): Promise<ActionResponse> {
       where: { id },
     });
 
-    revalidatePath("/admin");
-    revalidatePath("/");
-    revalidatePath("/equipamientos-clinicos");
-    revalidatePath("/equipamiento-veterinario");
+    // ISR se encarga de la revalidación cada 24 horas
 
     return { success: true };
   } catch (error) {
@@ -350,10 +342,7 @@ export async function toggleProductStatus(
       data: { status: newStatus },
     });
 
-    revalidatePath("/admin");
-    revalidatePath("/");
-    revalidatePath("/equipamientos-clinicos");
-    revalidatePath("/equipamiento-veterinario");
+    // ISR se encarga de la revalidación cada 24 horas
 
     return { success: true };
   } catch (error) {
