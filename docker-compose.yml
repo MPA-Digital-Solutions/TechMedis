@@ -1,9 +1,12 @@
-
-# Uso desarrollo: docker-compose up -d
+# ============================================
+# TechMedis - Docker Compose
+# ============================================
+# Uso desarrollo: docker-compose --profile dev up -d
 # Uso producción: docker-compose --profile prod up -d
-
+# ============================================
 
 services:
+  # ==================== MySQL Database ====================
   mysql:
     image: mysql:8.0
     container_name: techmedis_mysql
@@ -13,8 +16,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-techmedis}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "3306:3306"
+    # SEGURIDAD: No exponer MySQL al exterior
+    # Solo accesible desde la red interna Docker
+    # ports:
+    #   - "3306:3306"  # REMOVIDO - vulnerabilidad de seguridad
+    expose:
+      - "3306"
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -25,7 +32,15 @@ services:
       start_period: 30s
     networks:
       - techmedis_network
+    # Limitar recursos para evitar consumo excesivo
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
+  # ==================== App Development ====================
   app-dev:
     build:
       context: .
@@ -42,7 +57,9 @@ services:
       - ADMIN_USER=${ADMIN_USER:-admin}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin_pass}
     volumes:
+      # Mount source code for hot-reload
       - .:/app
+      # Prevent overwriting node_modules
       - /app/node_modules
       - /app/.next
     depends_on:
@@ -51,6 +68,7 @@ services:
     networks:
       - techmedis_network
 
+  # ==================== App Production ====================
   app:
     build:
       context: .
@@ -60,7 +78,7 @@ services:
     profiles:
       - prod
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"  # Solo localhost - Nginx hace el proxy
     environment:
       - NODE_ENV=production
       - DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE:-techmedis}?connection_limit=10&pool_timeout=30
@@ -74,13 +92,22 @@ services:
         condition: service_healthy
     networks:
       - techmedis_network
+    # Limitar recursos
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
 
+# ==================== Volumes ====================
 volumes:
   mysql_data:
     driver: local
   uploads_data:
     driver: local
 
+# ==================== Networks ====================
 networks:
   techmedis_network:
     driver: bridge
