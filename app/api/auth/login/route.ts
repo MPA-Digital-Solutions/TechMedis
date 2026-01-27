@@ -12,9 +12,15 @@ export async function POST(request: NextRequest) {
     const adminUser = process.env.ADMIN_USER;
     const adminPassword = process.env.ADMIN_PASSWORD;
 
+    // Detectar si estamos en HTTPS basándonos en el header X-Forwarded-Proto
+    const forwardedProto = request.headers.get("x-forwarded-proto");
+    const isSecure = forwardedProto === "https";
+
     console.log("=== API LOGIN ===");
     console.log("Username:", username);
     console.log("ADMIN_USER configured:", !!adminUser);
+    console.log("X-Forwarded-Proto:", forwardedProto);
+    console.log("isSecure:", isSecure);
 
     if (!adminUser || !adminPassword) {
       return NextResponse.json(
@@ -37,13 +43,13 @@ export async function POST(request: NextRequest) {
     const cookieStore = await cookies();
     cookieStore.set(ADMIN_SESSION_COOKIE, sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecure, // Solo true si realmente estamos en HTTPS
       sameSite: "lax",
       maxAge: SESSION_DURATION,
       path: "/",
     });
 
-    console.log("Cookie set successfully");
+    console.log("Cookie set with secure:", isSecure);
     console.log("=================");
 
     return NextResponse.json({ success: true });
