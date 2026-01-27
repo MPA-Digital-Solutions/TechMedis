@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Lock, User, Loader2, Shield } from "lucide-react";
-import { loginAdmin } from "@/lib/actions/auth";
-import { useRouter } from "next/navigation";
 
 export function LoginForm() {
   const [username, setUsername] = useState("");
@@ -12,7 +10,6 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,12 +17,20 @@ export function LoginForm() {
     setIsLoading(true);
 
     try {
-      const result = await loginAdmin(username, password);
-      
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: "include", // Importante para que las cookies se guarden
+      });
+
+      const result = await response.json();
+
       if (result.success) {
-        // Refresh para que el server reconozca la cookie, luego navegar
-        router.refresh();
-        router.push("/admin");
+        // Navegación completa para asegurar que las cookies estén disponibles
+        window.location.href = "/admin";
       } else {
         setError(result.error || "Error al iniciar sesión");
         setIsLoading(false);
@@ -88,6 +93,7 @@ export function LoginForm() {
                   className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
                   required
                   autoComplete="username"
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -107,6 +113,7 @@ export function LoginForm() {
                   className="w-full pl-11 pr-12 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-transparent transition-all"
                   required
                   autoComplete="current-password"
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
