@@ -1,7 +1,6 @@
 "use server";
 
-// NOTA: revalidatePath REMOVIDO para optimización de procesos
-// Los cambios se reflejarán con ISR (cada 24 horas) o manualmente via /api/revalidate
+import { revalidatePath } from "next/cache";
 import type { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import {
@@ -72,8 +71,10 @@ export async function createProduct(
       },
     });
 
-    // ISR se encarga de la revalidación cada 24 horas
-    // Para forzar actualización inmediata usar /api/revalidate
+    // Revalidar páginas que muestran productos
+    revalidatePath("/admin");
+    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamiento-veterinario");
 
     return { success: true, data: { id: product.id } };
   } catch (error) {
@@ -151,7 +152,11 @@ const { id: productId, metadata, ...restUpdateData } = validated;
       },
     });
 
-    // ISR se encarga de la revalidación cada 24 horas
+    // Revalidar páginas que muestran productos
+    revalidatePath("/admin");
+    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamiento-veterinario");
+    revalidatePath(`/productos/${validated.slug}`);
 
     return { success: true, data: { id: productId } };
   } catch (error) {
@@ -179,7 +184,10 @@ export async function deleteProduct(id: string): Promise<ActionResponse> {
       where: { id },
     });
 
-    // ISR se encarga de la revalidación cada 24 horas
+    // Revalidar páginas que muestran productos
+    revalidatePath("/admin");
+    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamiento-veterinario");
 
     return { success: true };
   } catch (error) {
@@ -342,7 +350,10 @@ export async function toggleProductStatus(
       data: { status: newStatus },
     });
 
-    // ISR se encarga de la revalidación cada 24 horas
+    // Revalidar páginas que muestran productos
+    revalidatePath("/admin");
+    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamiento-veterinario");
 
     return { success: true };
   } catch (error) {

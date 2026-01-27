@@ -1,7 +1,6 @@
 "use server";
 
-// NOTA: revalidatePath REMOVIDO para optimización de procesos
-// Los cambios se reflejarán con ISR (cada 24 horas) o manualmente via /api/revalidate
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 
 type ActionResponse<T = unknown> = {
@@ -69,8 +68,11 @@ export async function setConfig(
       QUERY_TIMEOUT
     );
 
-    // ISR se encarga de la revalidación cada 24 horas
-    // Para forzar actualización inmediata usar /api/revalidate
+    // Revalidar páginas que usan configuración
+    revalidatePath("/admin");
+    revalidatePath("/");
+    revalidatePath("/contacto");
+    
     return { success: true };
   } catch (error) {
     console.error("Error setting config:", error);
