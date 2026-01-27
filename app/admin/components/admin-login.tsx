@@ -23,7 +23,7 @@ export function AdminLogin() {
       const result = await loginAdmin(username, password);
       
       if (result.success) {
-        router.refresh();
+        router.push("/admin");
       } else {
         setError(result.error || "Error al iniciar sesión");
       }
