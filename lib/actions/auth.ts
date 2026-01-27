@@ -41,6 +41,10 @@ export async function loginAdmin(
       path: "/",
     });
 
+    // Importante: revalidar para que la cookie se propague correctamente
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/admin");
+
     return { success: true };
   } catch (error) {
     console.error("Error during login:", error);
