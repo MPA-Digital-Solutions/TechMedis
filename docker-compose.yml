@@ -1,6 +1,6 @@
 
-# Uso desarrollo: docker-compose --profile dev up -d
-# Uso producción: docker-compose --profile prod up -d
+# Uso desarrollo: docker compose --profile dev up -d
+# Uso producción: docker compose --profile prod up -d
 
 services:
   mysql:
