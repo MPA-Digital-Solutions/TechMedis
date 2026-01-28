@@ -134,18 +134,6 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
               <MessageCircle className="w-6 h-6" />
               Contactar por WhatsApp directamente
             </a>
-
-            <div className="bg-techmedis-light p-8 rounded-lg border border-gray-100">
-              <h3 className="text-lg font-bold text-techmedis-primary mb-4">Horario de Atención</h3>
-              <p className="text-techmedis-text mb-2">Lunes a Viernes: 8:00 AM - 6:00 PM</p>
-              <p className="text-techmedis-text mb-6">Sábados: 9:00 AM - 1:00 PM</p>
-              <div className="inline-block bg-white px-4 py-2 rounded-md shadow-sm border border-gray-100">
-                <p className="text-sm text-techmedis-secondary font-semibold flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  Soporte técnico de emergencia 24/7
-                </p>
-              </div>
-            </div>
           </motion.div>
 
           {/* Form Side */}
