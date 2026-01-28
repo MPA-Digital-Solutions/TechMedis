@@ -110,7 +110,7 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl md:text-5xl font-semibold text-techmedis-primary mb-8">Contáctenos</h1>
+            <h1 className="text-4xl md:text-5xl font-display text-techmedis-primary mb-8">Contáctenos</h1>
             <p className="text-xl text-techmedis-text mb-12 leading-relaxed font-light">
               Estamos aquí para responder sus consultas técnicas, comerciales o de soporte. Complete el formulario y nuestro equipo especializado le responderá con prioridad.
             </p>

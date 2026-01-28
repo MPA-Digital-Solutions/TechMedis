@@ -59,7 +59,7 @@ export default function ServiciosClient() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-5xl font-semibold text-techmedis-primary mb-6"
+              className="text-4xl md:text-5xl font-display text-techmedis-primary mb-6"
             >
               Servicios Profesionales
             </motion.h1>
@@ -106,7 +106,7 @@ export default function ServiciosClient() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl font-semibold text-techmedis-primary mb-6">
+            <h2 className="text-3xl font-display text-techmedis-primary mb-6">
               ¿Requiere asistencia técnica inmediata?
             </h2>
             <p className="text-lg text-techmedis-text mb-10 max-w-2xl mx-auto font-light">

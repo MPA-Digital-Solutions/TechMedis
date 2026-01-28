@@ -24,7 +24,7 @@ export default async function EquiposClinicosPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h1 className="text-4xl md:text-5xl font-display text-white mb-6">
                 Equipamientos Clínicos
               </h1>
               <p className="text-xl text-white/90 font-light leading-relaxed">

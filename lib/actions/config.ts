@@ -30,7 +30,6 @@ export async function getConfig(key: string): Promise<string | null> {
       }),
       QUERY_TIMEOUT
     );
-    console.log(`Config result for ${key}:`, config);
     return config?.value || null;
   } catch (error) {
     console.error("Error getting config:", error);

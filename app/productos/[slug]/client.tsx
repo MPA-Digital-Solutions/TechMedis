@@ -111,7 +111,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
               transition={{ duration: 0.5, delay: 0.1 }}
               className="flex flex-col"
             >
-              <h1 className="text-3xl md:text-4xl font-bold text-techmedis-primary mb-4">
+              <h1 className="text-3xl md:text-4xl font-display text-techmedis-primary mb-4">
                 {product.name}
               </h1>
 
@@ -184,7 +184,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-techmedis-primary mb-8 text-center">
+              <h2 className="text-2xl md:text-3xl font-display text-techmedis-primary mb-8 text-center">
                 Productos Relacionados
               </h2>
               
