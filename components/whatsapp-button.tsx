@@ -48,9 +48,14 @@ export function WhatsAppButton({
 
     // Fetch desde API solo si no hay cache válido
     fetch('/api/config/whatsapp')
-      .then(res => res.json())
+      .then(res => {
+        console.log('WhatsApp config response status:', res.status);
+        return res.json();
+      })
       .then(data => {
+        console.log('WhatsApp config data:', data);
         if (data.success && data.number) {
+          console.log('Setting WhatsApp number to:', data.number);
           setConfiguredNumber(data.number);
           // Guardar en localStorage para próximas visitas
           try {
@@ -62,6 +67,8 @@ export function WhatsAppButton({
           } catch {
             // localStorage no disponible, ignorar
           }
+        } else {
+          console.warn('Invalid WhatsApp config response:', data);
         }
       })
       .catch(err => {

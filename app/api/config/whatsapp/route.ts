@@ -5,6 +5,16 @@ export async function GET(request: NextRequest) {
   try {
     const number = await getWhatsAppNumber();
     
+    console.log("WhatsApp API: Retrieved number:", number);
+    
+    if (!number) {
+      console.warn("WhatsApp API: No number found, using default");
+      return NextResponse.json({
+        success: true,
+        number: "5491112345678" // fallback
+      });
+    }
+    
     return NextResponse.json({
       success: true,
       number: number

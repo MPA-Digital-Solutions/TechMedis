@@ -23,12 +23,14 @@ async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 // ==================== GET CONFIG ====================
 export async function getConfig(key: string): Promise<string | null> {
   try {
+    console.log(`Getting config for key: ${key}`);
     const config = await withTimeout<{ value: string } | null>(
       (prisma as any).config.findUnique({
         where: { key },
       }),
       QUERY_TIMEOUT
     );
+    console.log(`Config result for ${key}:`, config);
     return config?.value || null;
   } catch (error) {
     console.error("Error getting config:", error);
@@ -86,6 +88,8 @@ export async function setConfig(
 // ==================== GET WHATSAPP NUMBER ====================
 // Retorna valor por defecto si hay error de BD
 export async function getWhatsAppNumber(): Promise<string> {
+  console.log("Getting WhatsApp number from config");
   const number = await getConfig("whatsapp_number");
+  console.log("Retrieved WhatsApp number:", number);
   return number || "5491112345678";
 }
