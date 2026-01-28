@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/optimized-image";
 import { Package, Tag, Check, ArrowRight } from "lucide-react";
 
 // Tipo mínimo necesario para mostrar un ProductCard
@@ -41,20 +41,20 @@ export function ProductCard({ product, whatsappNumber = "5491112345678" }: Produ
       <div className="flex flex-col lg:flex-row">
         {/* Image Section - Más grande */}
         <Link href={`/productos/${product.slug}`} className="block relative lg:w-2/5">
-          <div className="relative aspect-[4/3] lg:aspect-square bg-gradient-to-br from-techmedis-light to-gray-100 overflow-hidden">
-            {product.image ? (
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                sizes="(max-width: 768px) 100vw, 40vw"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Package className="w-24 h-24 text-techmedis-primary/20" />
-              </div>
-            )}
+           <div className="relative aspect-[4/3] lg:aspect-square bg-gradient-to-br from-techmedis-light to-gray-100 overflow-hidden">
+             {product.image ? (
+               <OptimizedImage
+                 src={product.image}
+                 alt={product.name}
+                 fill
+                 className="object-cover transition-transform duration-700 group-hover:scale-110"
+                 sizes="(max-width: 768px) 100vw, 40vw"
+               />
+             ) : (
+               <div className="absolute inset-0 flex items-center justify-center">
+                 <Package className="w-24 h-24 text-techmedis-primary/20" />
+               </div>
+             )}
             
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

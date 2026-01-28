@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/optimized-image";
 import Link from "next/link";
 import { ArrowLeft, Package, Tag, CheckCircle, XCircle, Phone, MessageCircle } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
@@ -75,19 +75,19 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
               transition={{ duration: 0.5 }}
               className="relative"
             >
-              <div className="aspect-square rounded-2xl overflow-hidden bg-techmedis-light shadow-lg">
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-techmedis-light to-gray-100">
-                    <Package className="w-32 h-32 text-techmedis-primary/20" />
-                  </div>
+               <div className="aspect-square rounded-2xl overflow-hidden bg-techmedis-light shadow-lg">
+                 {product.image ? (
+                   <OptimizedImage
+                     src={product.image}
+                     alt={product.name}
+                     fill
+                     className="object-cover"
+                     priority
+                   />
+                 ) : (
+                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-techmedis-light to-gray-100">
+                     <Package className="w-32 h-32 text-techmedis-primary/20" />
+                   </div>
                 )}
               </div>
               
