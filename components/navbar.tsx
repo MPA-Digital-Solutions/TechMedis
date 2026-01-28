@@ -17,16 +17,22 @@ const navLinks = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    if (latest > 50) {
-      setIsScrolled(true);
+    const isScrollingDown = latest > lastScrollY;
+    
+    // Hide navbar when scrolling down, show when scrolling up
+    if (isScrollingDown && latest > 100) {
+      setIsVisible(false);
     } else {
-      setIsScrolled(false);
+      setIsVisible(true);
     }
+    
+    setLastScrollY(latest);
   });
 
   const handleLinkClick = () => {
@@ -34,12 +40,13 @@ export function Navbar() {
   };
 
   return (
-    <nav 
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-techmedis-primary shadow-lg py-3" : "bg-techmedis-primary py-4"
-      }`}
+    <motion.nav 
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : -100 }}
+      transition={{ duration: 0.3 }}
+      className="fixed top-0 left-0 right-0 z-50 bg-techmedis-primary"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link href="/" className="flex items-center">
@@ -122,6 +129,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }
