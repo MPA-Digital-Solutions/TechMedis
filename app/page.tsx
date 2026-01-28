@@ -41,6 +41,9 @@ export default function HomePage() {
   
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  
+  // Fade out del botón de solicitar asesoría basado en scroll - desaparece más temprano
+  const buttonOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
     <>
@@ -135,14 +138,19 @@ export default function HomePage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               >
-                <Link 
-                  href="/contacto"
-                  className="group inline-flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl"
+                <motion.div
+                  style={{ opacity: buttonOpacity }}
+                  className="inline-flex"
                 >
-                  <Phone className="w-5 h-5" />
-                  Solicitar Asesoría
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
+                  <Link 
+                    href="/contacto"
+                    className="group inline-flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl"
+                  >
+                    <Phone className="w-5 h-5" />
+                    Solicitar Asesoría
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
                 <button 
                   onClick={() => {
                     document.getElementById('catalogo-section')?.scrollIntoView({ 
