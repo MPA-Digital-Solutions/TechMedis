@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { CTAButton } from "@/components/cta-button";
 
 const navLinks = [
@@ -18,44 +18,55 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const lastScrollY = useRef(0);
   const pathname = usePathname();
-  const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const isScrollingDown = latest > lastScrollY;
+  // Scroll handler optimizado con requestAnimationFrame
+  useEffect(() => {
+    let ticking = false;
     
-    // Hide navbar when scrolling down, show when scrolling up
-    if (isScrollingDown && latest > 100) {
-      setIsVisible(false);
-    } else {
-      setIsVisible(true);
-    }
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const isScrollingDown = currentScrollY > lastScrollY.current;
+          
+          // Hide navbar when scrolling down past 100px, show when scrolling up
+          if (isScrollingDown && currentScrollY > 100) {
+            setIsVisible(false);
+          } else {
+            setIsVisible(true);
+          }
+          
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     
-    setLastScrollY(latest);
-  });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLinkClick = () => {
     setIsOpen(false);
   };
 
   return (
-    <motion.nav 
-      initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : -100 }}
-      transition={{ duration: 0.3 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-techmedis-primary"
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 bg-techmedis-primary transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
+          {/* Logo - CSS hover en lugar de Framer Motion */}
           <Link href="/" className="flex items-center">
-            <motion.img 
+            <img 
               src="/images/logo.png" 
               alt="Techmedis" 
-              className="h-16 w-auto"
-              whileHover={{ scale: 1.05, opacity: 0.9 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="h-16 w-auto hover:scale-105 hover:opacity-90 transition-transform duration-300"
             />
           </Link>
 
@@ -102,7 +113,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             className="lg:hidden bg-techmedis-secondary overflow-hidden"
           >
             <div className="px-4 py-4 space-y-3">
@@ -129,6 +140,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 }

@@ -1,5 +1,5 @@
-/* Google Fonts - Import */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Righteous&display=swap');
+/* Google Fonts - Optimizado con font-display:swap para mejor rendimiento */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Righteous&display=swap');
 
 @import "tailwindcss";
 
@@ -97,4 +97,56 @@ html {
   
   --font-family-display: 'Righteous', cursive;
   --font-family-body: 'Inter', sans-serif;
+}
+
+/* ======================================
+   Animaciones CSS optimizadas
+   (Mejor rendimiento que Framer Motion para loops)
+   ====================================== */
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: 1.5s;
+  opacity: 0;
+}
+
+/* Bounce suave para scroll indicator */
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 2s ease-in-out infinite;
+}
+
+/* Pulse suave para WhatsApp button */
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.15); opacity: 0; }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 2s ease-in-out infinite;
+}
+
+/* Reducir animaciones si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-bounce-slow {
+    animation: none;
+    opacity: 1;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

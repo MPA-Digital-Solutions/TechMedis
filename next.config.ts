@@ -11,8 +11,9 @@ const nextConfig: NextConfig = {
     ],
     // Formatos modernos para mejor compresión
     formats: ["image/avif", "image/webp"],
-    // Permitir imágenes sin optimización en /uploads (se sirven directamente)
-    unoptimized: process.env.NODE_ENV === "production",
+    // NO desactivar optimización globalmente - el componente OptimizedImage
+    // maneja específicamente las imágenes de /uploads
+    // unoptimized: false (default)
   },
   // Ignorar errores de TypeScript en build (para desarrollo rápido)
   typescript: {

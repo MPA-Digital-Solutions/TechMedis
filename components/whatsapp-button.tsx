@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 // Cache key y duración (24 horas en ms)
@@ -22,6 +21,13 @@ export function WhatsAppButton({
   message = "Hola! Estoy interesado en sus equipos médicos. ¿Podrían brindarme más información?" 
 }: WhatsAppButtonProps) {
   const [configuredNumber, setConfiguredNumber] = useState<string>("5491112345678");
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Mostrar el botón después de un delay (equivalente al delay: 1 de Framer Motion)
+    const timer = setTimeout(() => setIsVisible(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     // Si se pasa como prop, usarlo directamente
@@ -48,14 +54,9 @@ export function WhatsAppButton({
 
     // Fetch desde API solo si no hay cache válido
     fetch('/api/config/whatsapp')
-      .then(res => {
-        console.log('WhatsApp config response status:', res.status);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        console.log('WhatsApp config data:', data);
         if (data.success && data.number) {
-          console.log('Setting WhatsApp number to:', data.number);
           setConfiguredNumber(data.number);
           // Guardar en localStorage para próximas visitas
           try {
@@ -67,12 +68,10 @@ export function WhatsAppButton({
           } catch {
             // localStorage no disponible, ignorar
           }
-        } else {
-          console.warn('Invalid WhatsApp config response:', data);
         }
       })
-      .catch(err => {
-        console.warn('Failed to load WhatsApp config, using default:', err);
+      .catch(() => {
+        // Silenciosamente usar default
       });
   }, [phoneNumber]);
 
@@ -80,20 +79,17 @@ export function WhatsAppButton({
   const whatsappUrl = `https://wa.me/${finalPhoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <motion.a
+    <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: 1, type: "spring", stiffness: 260, damping: 20 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 transition-colors group"
+      className={`fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-300 group ${
+        isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
+      }`}
       aria-label="Contactar por WhatsApp"
     >
-      {/* Pulse animation ring */}
-      <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-25" />
+      {/* Pulse animation ring - CSS optimizado */}
+      <span className="absolute inset-0 rounded-full bg-green-500 animate-pulse-slow opacity-30" />
       
       {/* WhatsApp Icon - Official Logo */}
       <svg 
@@ -109,6 +105,6 @@ export function WhatsAppButton({
         Chatea con nosotros
         <span className="absolute top-1/2 -right-1 -translate-y-1/2 border-4 border-transparent border-l-gray-900" />
       </span>
-    </motion.a>
+    </a>
   );
 }

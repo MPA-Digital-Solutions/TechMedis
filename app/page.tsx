@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import { 
   ClipboardList, 
   Wrench, 
@@ -32,47 +32,105 @@ const stats = [
   { number: "24/7", label: "Soporte Técnico" },
 ];
 
+// Hook para detectar si debe reducir animaciones (mobile o preferencia del usuario)
+function useReducedMotion() {
+  const [shouldReduce, setShouldReduce] = useState(false);
+  
+  useEffect(() => {
+    // Detectar preferencia del usuario
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Detectar mobile (menos de 768px)
+    const isMobile = window.innerWidth < 768;
+    
+    setShouldReduce(mediaQuery.matches || isMobile);
+    
+    const handler = (e: MediaQueryListEvent) => setShouldReduce(e.matches || isMobile);
+    mediaQuery.addEventListener('change', handler);
+    
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+  
+  return shouldReduce;
+}
+
+// Animaciones simplificadas - tipo base
+type AnimationState = { opacity: number; y?: number; x?: number };
+
+// Animaciones con movimiento
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 } as AnimationState,
+  visible: { opacity: 1, y: 0 } as AnimationState
+};
+
+// Animación solo fade
+const fadeIn = {
+  hidden: { opacity: 0 } as AnimationState,
+  visible: { opacity: 1 } as AnimationState
+};
+
+// Sin animación
+const noAnimation = {
+  hidden: { opacity: 1 } as AnimationState,
+  visible: { opacity: 1 } as AnimationState
+};
+
 export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
+  const reduceMotion = useReducedMotion();
+  const [buttonOpacity, setButtonOpacity] = useState(1);
   
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  
-  // Fade out del botón de solicitar asesoría basado en scroll - desaparece más temprano
-  const buttonOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  // Scroll handler optimizado con requestAnimationFrame
+  useEffect(() => {
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (heroRef.current) {
+            const heroHeight = heroRef.current.offsetHeight;
+            const scrollY = window.scrollY;
+            const progress = Math.min(scrollY / (heroHeight * 0.5), 1);
+            setButtonOpacity(1 - progress);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Variantes de animación condicionales - siempre retorna el mismo tipo
+  const animFadeInUp = reduceMotion ? noAnimation : fadeInUp;
+  const animFadeIn = reduceMotion ? noAnimation : fadeIn;
 
   return (
     <>
-      {/* 1. HERO SECTION - Con imagen de fondo + blur azul */}
+      {/* 1. HERO SECTION - Con CSS parallax optimizado */}
       <section 
         ref={heroRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* Background Image */}
-        <motion.div 
-          style={{ y: backgroundY }}
-          className="absolute inset-0 z-0"
-        >
+        {/* Background Image - CSS parallax en lugar de Framer Motion */}
+        <div className="absolute inset-0 z-0 will-change-transform" style={{ transform: 'translateZ(-1px) scale(1.5)' }}>
           {/* Imagen de fondo */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
             style={{ backgroundImage: "url('/images/font-home.jpg')" }}
           />
           
-           {/* Gradient overlay azul desde abajo izquierda - AUMENTADO MUCHO MÁS */}
-           <div className="absolute inset-0 bg-gradient-to-tr from-techmedis-primary via-techmedis-primary/75 to-techmedis-primary/30" />
-           
-           {/* Extra blur muy fuerte en toda la sección inferior - CUBRE LA MAYORÍA DE LA IMAGEN */}
-           <div className="absolute bottom-0 left-0 w-full h-4/5 bg-gradient-to-t from-techmedis-primary via-techmedis-secondary/85 to-transparent blur-3xl" />
-           
-           {/* Overlay adicional de color azul puro para dominar sobre la imagen */}
-           <div className="absolute inset-0 bg-techmedis-primary/40" />
+          {/* Gradient overlay azul desde abajo izquierda */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-techmedis-primary via-techmedis-primary/75 to-techmedis-primary/30" />
           
-          {/* Overlay oscuro sutil para legibilidad */}
+          {/* Extra blur en la sección inferior */}
+          <div className="absolute bottom-0 left-0 w-full h-4/5 bg-gradient-to-t from-techmedis-primary via-techmedis-secondary/85 to-transparent blur-3xl" />
+          
+          {/* Overlay adicional de color azul */}
+          <div className="absolute inset-0 bg-techmedis-primary/40" />
+          
+          {/* Overlay oscuro sutil */}
           <div className="absolute inset-0 bg-black/20" />
 
           {/* Grid Pattern Overlay */}
@@ -83,20 +141,17 @@ export default function HomePage() {
               backgroundSize: '60px 60px'
             }}
           />
-        </motion.div>
+        </div>
 
         {/* Content */}
-        <motion.div 
-          style={{ y: textY }}
-          className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20"
-        >
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Column - Text */}
             <div className="text-center lg:text-left">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                initial={animFadeInUp.hidden}
+                animate={animFadeInUp.visible}
+                transition={{ duration: 0.5 }}
                 className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-8"
               >
                 <Sparkles className="w-4 h-4 text-yellow-300" />
@@ -104,9 +159,9 @@ export default function HomePage() {
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                initial={animFadeInUp.hidden}
+                animate={animFadeInUp.visible}
+                transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.1 }}
                 className="text-4xl sm:text-5xl lg:text-6xl font-display text-white mb-6 leading-tight"
               >
                 Equipamiento Médico de{" "}
@@ -114,33 +169,28 @@ export default function HomePage() {
                   <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-white">
                     marcas líderes
                   </span>
-                  <motion.span
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    className="absolute bottom-2 left-0 h-3 bg-white/20 -z-0"
-                  />
+                  <span className="absolute bottom-2 left-0 h-3 bg-white/20 -z-0 w-full" />
                 </span>
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                initial={animFadeInUp.hidden}
+                animate={animFadeInUp.visible}
+                transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.15 }}
                 className="text-lg sm:text-xl text-white/80 mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0"
               >
                 Proveemos equipos médicos y soluciones de imágenes de alta calidad
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+                initial={animFadeInUp.hidden}
+                animate={animFadeInUp.visible}
+                transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.2 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               >
-                <motion.div
+                <div 
                   style={{ opacity: buttonOpacity }}
-                  className="inline-flex"
+                  className="inline-flex transition-opacity duration-100"
                 >
                   <Link 
                     href="/contacto"
@@ -150,7 +200,7 @@ export default function HomePage() {
                     Solicitar Asesoría
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                </motion.div>
+                </div>
                 <button 
                   onClick={() => {
                     document.getElementById('catalogo-section')?.scrollIntoView({ 
@@ -165,18 +215,15 @@ export default function HomePage() {
               </motion.div>
             </div>
 
-            {/* Right Column - Feature Cards */}
+            {/* Right Column - Feature Cards (solo desktop) */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              initial={reduceMotion ? {} : { opacity: 0, x: 30 }}
+              animate={reduceMotion ? {} : { opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               className="hidden lg:grid grid-cols-2 gap-4"
             >
               {/* Feature Card 1 */}
-              <motion.div 
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 col-span-2"
-              >
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 col-span-2 hover:bg-white/15 transition-colors duration-300">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-blue-500/20 rounded-xl">
                     <Stethoscope className="w-8 h-8 text-blue-300" />
@@ -186,70 +233,51 @@ export default function HomePage() {
                     <p className="text-white/70 text-sm">Tecnología de punta para diagnóstico y tratamiento en instituciones de salud.</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Feature Card 2 */}
-              <motion.div 
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6"
-              >
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300">
                 <div className="p-3 bg-emerald-500/20 rounded-xl w-fit mb-3">
                   <Heart className="w-6 h-6 text-emerald-300" />
                 </div>
                 <h3 className="text-white font-bold mb-1">Veterinario</h3>
                 <p className="text-white/70 text-sm">Equipos especializados para el cuidado animal.</p>
-              </motion.div>
+              </div>
 
               {/* Feature Card 3 */}
-              <motion.div 
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6"
-              >
+              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300">
                 <div className="p-3 bg-amber-500/20 rounded-xl w-fit mb-3">
                   <Award className="w-6 h-6 text-amber-300" />
                 </div>
                 <h3 className="text-white font-bold mb-1">Certificados</h3>
                 <p className="text-white/70 text-sm">Calidad garantizada con estándares internacionales.</p>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2"
-          >
-            <motion.div className="w-1.5 h-3 bg-white/60 rounded-full" />
-          </motion.div>
-        </motion.div>
+        {/* Scroll Indicator - CSS animation en lugar de Framer Motion infinito */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in">
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2 animate-bounce-slow">
+            <div className="w-1.5 h-3 bg-white/60 rounded-full" />
+          </div>
+        </div>
       </section>
 
-      {/* 2. STATS SECTION - Nueva */}
+      {/* 2. STATS SECTION */}
       <section className="py-16 bg-white relative z-10 -mt-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial={animFadeIn.hidden}
+            whileInView={animFadeIn.visible}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
             className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 md:p-12"
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               {stats.map((stat, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="text-center"
                 >
                   <span className="block text-4xl md:text-5xl font-bold text-techmedis-primary mb-2">
@@ -258,20 +286,21 @@ export default function HomePage() {
                   <span className="text-sm text-techmedis-text/70 font-medium">
                     {stat.label}
                   </span>
-                </motion.div>
+                </div>
               ))}
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* 3. CATEGORÍAS SECTION - Adaptado para Mobile */}
+      {/* 3. CATEGORÍAS SECTION */}
       <section id="catalogo-section" className="py-20 md:py-28 bg-techmedis-light scroll-mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={animFadeIn.hidden}
+            whileInView={animFadeIn.visible}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
             className="text-center mb-16"
           >
             <span className="inline-block text-techmedis-secondary font-semibold text-sm uppercase tracking-wider mb-4">
@@ -285,21 +314,22 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Cards apiladas verticalmente en mobile, lado a lado en desktop */}
+          {/* Cards */}
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             {/* Card Clínico */}
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 flex-1"
+              initial={animFadeInUp.hidden}
+              whileInView={animFadeInUp.visible}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4 }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300 flex-1"
             >
               <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1516549655169-df83a0774514" 
                   alt="Equipamiento Clínico" 
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-techmedis-primary/90 via-techmedis-primary/40 to-transparent" />
               </div>
@@ -328,17 +358,18 @@ export default function HomePage() {
 
             {/* Card Veterinario */}
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-all duration-500 flex-1"
+              initial={animFadeInUp.hidden}
+              whileInView={animFadeInUp.visible}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.1 }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300 flex-1"
             >
               <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def" 
                   alt="Equipamiento Veterinario" 
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-teal-600/90 via-teal-600/40 to-transparent" />
               </div>
@@ -375,9 +406,10 @@ export default function HomePage() {
       <section className="py-20 md:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial={animFadeIn.hidden}
+            whileInView={animFadeIn.visible}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
             className="text-center mb-16"
           >
             <span className="inline-block text-techmedis-secondary font-semibold text-sm uppercase tracking-wider mb-4">
@@ -395,20 +427,19 @@ export default function HomePage() {
             {services.map((service, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -8 }}
-                className="group bg-techmedis-light rounded-2xl p-8 hover:bg-techmedis-primary transition-all duration-500 cursor-pointer"
+                initial={animFadeInUp.hidden}
+                whileInView={animFadeInUp.visible}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.3, delay: reduceMotion ? 0 : index * 0.05 }}
+                className="group bg-techmedis-light rounded-2xl p-8 hover:bg-techmedis-primary transition-colors duration-300 cursor-pointer"
               >
-                <div className="text-techmedis-primary group-hover:text-white mb-6 transition-colors duration-500">
+                <div className="text-techmedis-primary group-hover:text-white mb-6 transition-colors duration-300">
                   {service.icon}
                 </div>
-                <h3 className="text-lg font-bold text-techmedis-primary group-hover:text-white mb-3 transition-colors duration-500">
+                <h3 className="text-lg font-bold text-techmedis-primary group-hover:text-white mb-3 transition-colors duration-300">
                   {service.title}
                 </h3>
-                <p className="text-sm text-techmedis-text/70 group-hover:text-white/80 leading-relaxed transition-colors duration-500">
+                <p className="text-sm text-techmedis-text/70 group-hover:text-white/80 leading-relaxed transition-colors duration-300">
                   {service.desc}
                 </p>
               </motion.div>
@@ -420,17 +451,17 @@ export default function HomePage() {
       {/* 6. CTA FINAL */}
       <section className="py-20 md:py-28 bg-gradient-to-br from-techmedis-primary via-techmedis-secondary to-techmedis-primary relative overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-1/2 -right-1/4 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl" />
           <div className="absolute -bottom-1/2 -left-1/4 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial={animFadeIn.hidden}
+            whileInView={animFadeIn.visible}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-display text-white mb-6">
               ¿Listo para modernizar su institución?
