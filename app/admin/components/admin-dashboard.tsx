@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -128,13 +127,16 @@ export function AdminDashboard({ initialProducts, initialConfig = {}, initialCli
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/">
-                <Image 
-                  src="/images/logo.png" 
-                  alt="Techmedis" 
-                  width={140}
-                  height={48}
-                  className="h-12 w-auto"
-                />
+                <picture>
+                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <img 
+                    src="/images/logo.png" 
+                    alt="Techmedis" 
+                    width={140}
+                    height={48}
+                    className="h-12 w-auto"
+                  />
+                </picture>
               </Link>
               <span className="text-white/60 text-sm hidden sm:block">Panel de Administración</span>
             </div>

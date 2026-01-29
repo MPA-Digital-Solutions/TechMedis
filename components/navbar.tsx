@@ -63,11 +63,14 @@ export function Navbar() {
         <div className="flex justify-between items-center">
           {/* Logo - CSS hover en lugar de Framer Motion */}
           <Link href="/" className="flex items-center">
-            <img 
-              src="/images/logo.png" 
-              alt="Techmedis" 
-              className="h-16 w-auto hover:scale-105 hover:opacity-90 transition-transform duration-300"
-            />
+            <picture>
+              <source srcSet="/images/logo.webp" type="image/webp" />
+              <img 
+                src="/images/logo.png" 
+                alt="Techmedis" 
+                className="h-16 w-auto hover:scale-105 hover:opacity-90 transition-transform duration-300"
+              />
+            </picture>
           </Link>
 
           {/* Desktop Navigation */}
