@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { OptimizedImage } from "@/components/optimized-image";
+import { FormattedDescription } from "@/components/formatted-description";
 import Link from "next/link";
 import { ArrowLeft, Package, Tag, CheckCircle, XCircle, Phone, MessageCircle } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
@@ -133,9 +134,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
               {/* Descripción */}
               <div className="mb-8 flex-grow">
                 <h2 className="text-lg font-semibold text-techmedis-primary mb-3">Descripción</h2>
-                <p className="text-techmedis-text leading-relaxed whitespace-pre-line text-lg">
-                  {product.description}
-                </p>
+                <FormattedDescription text={product.description} className="text-lg" />
               </div>
 
               {/* Call to Action Box */}

@@ -158,23 +158,32 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             </div>
           </div>
 
-          {/* Descripción */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Descripción *
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, description: e.target.value }))
-              }
-              required
-              rows={4}
-              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all resize-none"
-              placeholder="Descripción detallada del producto..."
-            />
-          </div>
+           {/* Descripción */}
+           <div>
+             <label className="block text-sm font-medium text-gray-700 mb-1">
+               Descripción *
+             </label>
+             <textarea
+               name="description"
+               value={formData.description}
+               onChange={(e) =>
+                 setFormData((prev) => ({ ...prev, description: e.target.value }))
+               }
+               required
+               rows={6}
+               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all resize-none font-mono text-sm"
+               placeholder="Descripción detallada del producto...&#10;&#10;Puedes usar:&#10;- Puntos con guion y espacio (- Texto)&#10;- Números (1. Texto, 2. Texto)&#10;- Párrafos normales"
+             />
+             <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+               <p className="text-xs font-semibold text-blue-900 mb-2">💡 Cómo formatear:</p>
+               <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                 <li><code className="bg-blue-100 px-1 rounded">- Texto</code> para viñetas</li>
+                 <li><code className="bg-blue-100 px-1 rounded">1. Texto</code> para listas numeradas</li>
+                 <li>Saltos de línea se respetan</li>
+                 <li>Espacios en blanco separan párrafos</li>
+               </ul>
+             </div>
+           </div>
 
           {/* Categoría y Estado */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
