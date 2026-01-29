@@ -11,7 +11,7 @@ const navLinks = [
   { path: "/", label: "Inicio" },
   { path: "/equipamientos-clinicos", label: "Clínico" },
   { path: "/equipamiento-veterinario", label: "Veterinario" },
-  { path: "/servicios", label: "Servicios" },
+  { path: "/services", label: "Services" },
   { path: "/sobre-nosotros", label: "Nosotros" },
 ];
 
