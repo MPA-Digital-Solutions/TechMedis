@@ -58,32 +58,6 @@ export function ProductCard({ product, whatsappNumber = "5491112345678" }: Produ
             
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4">
-              <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold shadow-lg backdrop-blur-sm ${
-                product.category === "clinico" 
-                  ? "bg-blue-500/90 text-white" 
-                  : "bg-emerald-500/90 text-white"
-              }`}>
-                <Tag className="w-3.5 h-3.5" />
-                {product.category === "clinico" ? "Clínico" : "Veterinario"}
-              </span>
-            </div>
-
-            {/* Status Badge */}
-            <div className="absolute top-4 right-4">
-              {isAvailable ? (
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-500/90 text-white text-sm font-semibold rounded-full shadow-lg backdrop-blur-sm">
-                  <Check className="w-3.5 h-3.5" />
-                  Disponible
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-500/90 text-white text-sm font-semibold rounded-full shadow-lg backdrop-blur-sm">
-                  No Disponible
-                </span>
-              )}
-            </div>
           </div>
         </Link>
 

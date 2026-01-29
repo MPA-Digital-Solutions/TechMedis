@@ -91,18 +91,6 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
                    </div>
                 )}
               </div>
-              
-              {/* Badges */}
-              <div className="absolute top-4 left-4 flex flex-col gap-2">
-                <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-lg ${
-                  categoryColor === "blue" 
-                    ? "bg-blue-500 text-white" 
-                    : "bg-green-500 text-white"
-                }`}>
-                  <Tag className="w-4 h-4 mr-2" />
-                  {categoryLabel}
-                </span>
-              </div>
             </motion.div>
 
             {/* Información */}

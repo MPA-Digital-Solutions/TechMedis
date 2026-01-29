@@ -21,7 +21,7 @@ export function CTAButton({
 }: CTAButtonProps) {
   const variants: Record<string, string> = {
     primary: "bg-techmedis-primary hover:bg-techmedis-primary/90 text-white",
-    secondary: "bg-transparent border-2 border-techmedis-primary text-techmedis-primary hover:bg-techmedis-light",
+    secondary: "bg-transparent border-2 border-techmedis-primary text-white hover:bg-techmedis-light",
     outline: "bg-white border-2 border-white text-techmedis-primary hover:bg-white/90",
   };
 

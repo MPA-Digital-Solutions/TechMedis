@@ -175,7 +175,7 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                placeholder="Descripción detallada del producto...&#10;&#10;Puedes usar:&#10;- Puntos con guion y espacio (- Texto)&#10;- Números (1. Texto, 2. Texto)&#10;- Párrafos normales"
              />
              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-               <p className="text-xs font-semibold text-blue-900 mb-2">💡 Cómo formatear:</p>
+               <p className="text-xs font-semibold text-blue-900 mb-2">Cómo formatear:</p>
                <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
                  <li><code className="bg-blue-100 px-1 rounded">- Texto</code> para viñetas</li>
                  <li><code className="bg-blue-100 px-1 rounded">1. Texto</code> para listas numeradas</li>
