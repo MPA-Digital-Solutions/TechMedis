@@ -5,8 +5,8 @@ import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductDetailClient } from "./client";
 import type { Product } from "@/lib/validations/product";
 
-// ISR: Regenerar página cada 24 horas (86400 segundos) - optimizado para bajo tráfico
-export const revalidate = 86400;
+// ISR: Regenerar página cada 10 minutos (600 segundos) para cambios rápidos
+export const revalidate = 600;
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;

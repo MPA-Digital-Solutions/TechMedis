@@ -3,12 +3,12 @@ import { getProducts } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
 
-// ISR: Regenerar página cada 24 horas (86400 segundos) - optimizado para bajo tráfico
-export const revalidate = 86400;
+// DINÁMICO: No cachear, siempre obtener datos frescos de la BD
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Equipamiento Veterinario - Techmedis",
-  description: "Catálogo de equipamiento veterinario especializado. Soluciones integrales para clínicas veterinarias.",
+  description: "Catálogo de equipamiento veterinario. Tecnología especializada para clínicas veterinarias.",
 };
 
 export default async function EquipoVeterinarioPage() {
