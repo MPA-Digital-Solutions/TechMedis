@@ -186,19 +186,19 @@ export default function HomePage() {
                 initial={animFadeInUp.hidden}
                 animate={animFadeInUp.visible}
                 transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.2 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center lg:justify-start items-stretch sm:items-center"
               >
                 <div 
                   style={{ opacity: buttonOpacity }}
-                  className="inline-flex transition-opacity duration-100"
+                   className="flex transition-opacity duration-100"
                 >
                   <Link 
                     href="/contacto"
-                    className="group inline-flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl"
+                     className="group flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl flex-1 sm:flex-none"
                   >
-                    <Phone className="w-5 h-5" />
-                    Solicitar Asesoría
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                     <Phone className="w-5 h-5 flex-shrink-0" />
+                     <span>Solicitar Asesoría</span>
+                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                   </Link>
                 </div>
                 <button 
@@ -208,7 +208,7 @@ export default function HomePage() {
                       block: 'start'
                     });
                   }}
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-all cursor-pointer"
+                   className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-all cursor-pointer flex-1 sm:flex-none"
                 >
                   Ver Catálogo
                 </button>
@@ -469,7 +469,7 @@ export default function HomePage() {
             <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
               Nuestro equipo de expertos está listo para asesorarlo y encontrar la solución perfecta para sus necesidades.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-stretch sm:items-center">
               <CTAButton variant="outline" to="/contacto">
                 <span className="flex items-center gap-2">
                   <Phone className="w-5 h-5" />

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface CTAButtonProps {
@@ -27,18 +26,16 @@ export function CTAButton({
 
   const selectedVariant = variants[variant] || variants.primary;
 
-  const buttonClasses = `${selectedVariant} px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 cursor-pointer ${className}`;
+  const buttonClasses = `${selectedVariant} px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer inline-flex items-center justify-center gap-2 ${className}`;
 
   const content = (
-    <motion.button
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+    <button
       className={buttonClasses}
       onClick={onClick}
       type="button"
     >
       {children}
-    </motion.button>
+    </button>
   );
 
   if (to) {
