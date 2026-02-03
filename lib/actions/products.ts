@@ -38,6 +38,8 @@ export async function createProduct(
   formData: FormData
 ): Promise<ActionResponse<{ id: string }>> {
   try {
+    const subcategorySlug = formData.get("subcategory") as string;
+    
     const rawData = {
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
@@ -47,6 +49,7 @@ export async function createProduct(
       stock: formData.get("stock"),
       status: formData.get("status") as string,
       category: formData.get("category") as string,
+      subcategory: subcategorySlug && subcategorySlug.trim() !== "" ? subcategorySlug : null,
       image: null as string | null,
     };
     const imageFile = formData.get("image") as File | null;
@@ -92,6 +95,7 @@ export async function updateProduct(
 ): Promise<ActionResponse<{ id: string }>> {
   try {
     const id = formData.get("id") as string;
+    const subcategorySlug = formData.get("subcategory") as string;
     
     const rawData: UpdateProductInput = {
       id,
@@ -100,6 +104,7 @@ export async function updateProduct(
       description: formData.get("description") as string,
       status: formData.get("status") as "active" | "inactive",
       category: formData.get("category") as "clinico" | "veterinario",
+      subcategory: subcategorySlug && subcategorySlug.trim() !== "" ? subcategorySlug : null,
     };
 
     const imageFile = formData.get("image") as File | null;

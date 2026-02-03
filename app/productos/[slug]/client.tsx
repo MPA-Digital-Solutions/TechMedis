@@ -6,7 +6,9 @@ import { FormattedDescription } from "@/components/formatted-description";
 import Link from "next/link";
 import { ArrowLeft, Package, Tag, CheckCircle, XCircle, Phone, MessageCircle } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
+import { SUBCATEGORIES, CATEGORY_LABELS } from "@/lib/validations/product";
 import type { Product } from "@/lib/validations/product";
+import type { Category } from "@/lib/validations/product";
 
 // Tipo ligero para productos relacionados (solo campos necesarios para mostrar cards)
 interface RelatedProduct {
@@ -27,8 +29,13 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({ product, relatedProducts, whatsappNumber = "5491112345678" }: ProductDetailClientProps) {
   const isActive = product.status === "active";
-  const categoryLabel = product.category === "clinico" ? "Clínico" : "Veterinario";
+  const categoryLabel = CATEGORY_LABELS[product.category as Category];
   const categoryColor = product.category === "clinico" ? "blue" : "green";
+
+  // Obtener información de subcategoría si existe
+  const subcategoryInfo = product.subcategory
+    ? SUBCATEGORIES[product.category as Category]?.find((sub) => sub.slug === product.subcategory)
+    : null;
 
   const whatsappMessage = encodeURIComponent(
     `Hola! Estoy interesado en el producto: ${product.name}. ¿Podrían darme más información?`
@@ -40,7 +47,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
       {/* Breadcrumb */}
       <section className="bg-techmedis-light py-4 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center space-x-2 text-sm">
+          <nav className="flex items-center space-x-2 text-sm flex-wrap">
             <Link href="/" className="text-techmedis-text hover:text-techmedis-primary transition-colors">
               Inicio
             </Link>
@@ -51,6 +58,17 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
             >
               {product.category === "clinico" ? "Equipamientos Clínicos" : "Equipamiento Veterinario"}
             </Link>
+            {subcategoryInfo && (
+              <>
+                <span className="text-gray-400">/</span>
+                <Link 
+                  href={`/${product.category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`} 
+                  className="text-techmedis-text hover:text-techmedis-primary transition-colors"
+                >
+                  {subcategoryInfo.name}
+                </Link>
+              </>
+            )}
             <span className="text-gray-400">/</span>
             <span className="text-techmedis-primary font-medium">{product.name}</span>
           </nav>
@@ -61,7 +79,10 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
       <section className="py-12 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link 
-            href={product.category === "clinico" ? "/equipamientos-clinicos" : "/equipamiento-veterinario"}
+            href={product.subcategory 
+              ? `/${product.category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`
+              : `/${product.category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}`
+            }
             className="inline-flex items-center text-techmedis-primary hover:text-techmedis-secondary mb-8 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -103,6 +124,19 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
               <h1 className="text-3xl md:text-4xl font-display text-techmedis-primary mb-4">
                 {product.name}
               </h1>
+
+              {/* Categoría y Subcategoría */}
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-${categoryColor}-50 text-${categoryColor}-700`}>
+                  <Tag className="w-4 h-4 mr-2" />
+                  {categoryLabel}
+                </span>
+                {subcategoryInfo && (
+                  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-50 text-purple-700">
+                    {subcategoryInfo.name}
+                  </span>
+                )}
+              </div>
 
               {/* Estado */}
               <div className="flex items-center gap-4 mb-6">

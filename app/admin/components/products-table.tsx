@@ -6,6 +6,7 @@ import { deleteProduct, toggleProductStatus } from "@/lib/actions/products";
 import {
   CATEGORY_LABELS,
   STATUS_LABELS,
+  SUBCATEGORIES,
   type Product,
   type Category,
   type ProductStatus,
@@ -21,6 +22,15 @@ export function ProductsTable({ products }: ProductsTableProps) {
   const { toast } = useToast();
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Función para obtener el nombre de la subcategoría por su slug
+  const getSubcategoryName = (slug: string | null | undefined, category: Category): string => {
+    if (!slug) return "Sin asignar";
+    
+    const subcategories = SUBCATEGORIES[category];
+    const subcategory = subcategories?.find((sub) => sub.slug === slug);
+    return subcategory?.name || "Desconocida";
+  };
 
   const handleDelete = async (id: string) => {
     if (!confirm("¿Estás seguro de eliminar este producto?")) return;
@@ -103,6 +113,9 @@ export function ProductsTable({ products }: ProductsTableProps) {
                   Categoría
                 </th>
                 <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
+                  Subcategoría
+                </th>
+                <th className="text-left px-6 py-4 text-sm font-semibold text-gray-600">
                   Estado
                 </th>
                 <th className="text-right px-6 py-4 text-sm font-semibold text-gray-600">
@@ -147,6 +160,15 @@ export function ProductsTable({ products }: ProductsTableProps) {
                     >
                       {CATEGORY_LABELS[product.category as Category]}
                     </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    {product.subcategory ? (
+                      <span className="inline-flex px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                        {getSubcategoryName(product.subcategory, product.category as Category)}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-400">Sin asignar</span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <button

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getProducts } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
+import { SubcategoryFilterClient } from "@/components/subcategory-filter-client";
+import { SUBCATEGORIES } from "@/lib/validations/product";
 
 // DINÁMICO: No cachear, siempre obtener datos frescos de la BD
 export const dynamic = "force-dynamic";
@@ -11,11 +13,28 @@ export const metadata: Metadata = {
   description: "Catálogo de equipamiento médico clínico. Tecnología de vanguardia para diagnóstico y tratamiento.",
 };
 
-export default async function EquiposClinicosPage() {
+interface PageProps {
+  searchParams: Promise<{ subcategory?: string }>;
+}
+
+export default async function EquiposClinicosPage({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const selectedSubcategory = params.subcategory;
+
   const [products, whatsappNumber] = await Promise.all([
     getProducts({ category: "clinico", status: "active" }),
     getWhatsAppNumber(),
   ]);
+
+  // Filtrar productos por subcategoría si se seleccionó una
+  const filteredProducts = selectedSubcategory
+    ? products.filter((product) => product.subcategory === selectedSubcategory)
+    : products;
+
+  // Obtener el nombre de la subcategoría seleccionada
+  const selectedSubcategoryObj = selectedSubcategory
+    ? SUBCATEGORIES.clinico.find((sub) => sub.slug === selectedSubcategory)
+    : null;
 
   return (
     <>
@@ -26,6 +45,11 @@ export default async function EquiposClinicosPage() {
             <div>
               <h1 className="text-4xl md:text-5xl font-display text-white mb-6">
                 Equipamientos Clínicos
+                {selectedSubcategoryObj && (
+                  <span className="block text-2xl font-normal text-white/80 mt-2">
+                    {selectedSubcategoryObj.name}
+                  </span>
+                )}
               </h1>
               <p className="text-xl text-white/90 font-light leading-relaxed">
                 Tecnología médica avanzada para optimizar el diagnóstico y la atención al paciente, 
@@ -46,9 +70,12 @@ export default async function EquiposClinicosPage() {
       {/* Catálogo */}
       <section className="py-16 md:py-24 bg-techmedis-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Filtro de Subcategorías */}
+          <SubcategoryFilterClient category="clinico" currentSubcategory={selectedSubcategory} />
+
           <ProductsGrid 
-            products={products} 
-            emptyMessage="No hay equipamientos clínicos disponibles en este momento."
+            products={filteredProducts} 
+            emptyMessage="No hay equipamientos clínicos disponibles en esta subcategoría."
             whatsappNumber={whatsappNumber}
           />
         </div>

@@ -6,13 +6,18 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CTAButton } from "@/components/cta-button";
+import { CategoryDropdown } from "@/components/category-dropdown";
+import { MobileCategoryDropdown } from "@/components/mobile-category-dropdown";
 
 const navLinks = [
   { path: "/", label: "Inicio" },
-  { path: "/equipamientos-clinicos", label: "Clínico" },
-  { path: "/equipamiento-veterinario", label: "Veterinario" },
   { path: "/services", label: "Services" },
   { path: "/sobre-nosotros", label: "Nosotros" },
+];
+
+const categoryLinks = [
+  { category: "clinico" as const, label: "Clínico" },
+  { category: "veterinario" as const, label: "Veterinario" },
 ];
 
 export function Navbar() {
@@ -75,25 +80,66 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
-                  pathname === link.path
-                    ? "text-white"
-                    : "text-white/80 hover:text-white"
-                }`}
-              >
-                {link.label}
-                {pathname === link.path && (
-                  <motion.div
-                    layoutId="underline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                  />
-                )}
-              </Link>
-            ))}
+            {/* Inicio */}
+            <Link
+              href="/"
+              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
+                pathname === "/"
+                  ? "text-white"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              Inicio
+              {pathname === "/" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                />
+              )}
+            </Link>
+
+            {/* Clínico con Dropdown */}
+            <CategoryDropdown category="clinico" label="Clínico" pathname={pathname} />
+
+            {/* Veterinario con Dropdown */}
+            <CategoryDropdown category="veterinario" label="Veterinario" pathname={pathname} />
+
+            {/* Services */}
+            <Link
+              href="/services"
+              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
+                pathname === "/services"
+                  ? "text-white"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              Services
+              {pathname === "/services" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                />
+              )}
+            </Link>
+
+            {/* Nosotros */}
+            <Link
+              href="/sobre-nosotros"
+              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
+                pathname === "/sobre-nosotros"
+                  ? "text-white"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              Nosotros
+              {pathname === "/sobre-nosotros" && (
+                <motion.div
+                  layoutId="underline"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                />
+              )}
+            </Link>
+            
             <CTAButton variant="outline" to="/contacto" className="px-5 py-2 text-sm border-white text-techmedis-primary bg-white hover:bg-white/90">
               Contactar
             </CTAButton>
@@ -120,20 +166,57 @@ export function Navbar() {
             className="lg:hidden bg-techmedis-secondary overflow-hidden"
           >
             <div className="px-4 py-4 space-y-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  onClick={handleLinkClick}
-                  className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
-                    pathname === link.path
-                      ? "bg-white/20 text-white"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {/* Inicio */}
+              <Link
+                href="/"
+                onClick={handleLinkClick}
+                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
+                  pathname === "/"
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                Inicio
+              </Link>
+
+              {/* Mobile Category Dropdowns */}
+              <MobileCategoryDropdown 
+                category="clinico" 
+                label="Clínico" 
+                onClose={handleLinkClick}
+              />
+              <MobileCategoryDropdown 
+                category="veterinario" 
+                label="Veterinario" 
+                onClose={handleLinkClick}
+              />
+
+              {/* Services */}
+              <Link
+                href="/services"
+                onClick={handleLinkClick}
+                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
+                  pathname === "/services"
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                Services
+              </Link>
+
+              {/* Nosotros */}
+              <Link
+                href="/sobre-nosotros"
+                onClick={handleLinkClick}
+                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
+                  pathname === "/sobre-nosotros"
+                    ? "bg-white/20 text-white"
+                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                Nosotros
+              </Link>
+
               <div className="pt-2">
                 <CTAButton variant="outline" to="/contacto" className="w-full text-center block border-white text-techmedis-primary bg-white hover:bg-white/90" onClick={handleLinkClick}>
                   Contactar

@@ -9,21 +9,23 @@ datasource db {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String   @db.VarChar(255)
-  slug        String   @unique @db.VarChar(255)
-  description String   @db.Text
-  status      String   @default("active") @db.VarChar(50) // Valores: "active", "inactive"
-  category    String   @db.VarChar(100) // Valores permitidos: "clinico", "veterinario"
-  image       String?  @db.VarChar(255) // Ruta a la imagen en carpeta public
+  id              String   @id @default(cuid())
+  name            String   @db.VarChar(255)
+  slug            String   @unique @db.VarChar(255)
+  description     String   @db.Text
+  status          String   @default("active") @db.VarChar(50) // Valores: "active", "inactive"
+  category        String   @db.VarChar(100) // Valores permitidos: "clinico", "veterinario"
+  subcategory     String?  @db.VarChar(255) // Slug de la subcategoría (ej: "flat-panel")
+  image           String?  @db.VarChar(255) // Ruta a la imagen en carpeta public
   
-  metadata    Json     @default("{}")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  metadata        Json     @default("{}")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   
   @@index([category])
   @@index([status])
   @@index([category, status])
+  @@index([subcategory])
 }
 
 model Config {

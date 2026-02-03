@@ -9,8 +9,9 @@ import {
   CATEGORY_LABELS,
   STATUS_OPTIONS,
   STATUS_LABELS,
-  generateSlug,
+  SUBCATEGORIES,
   type Product,
+  type Category,
 } from "@/lib/validations/product";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -18,6 +19,15 @@ interface ProductFormProps {
   product?: Product | null;
   onClose: () => void;
   onSuccess?: () => void;
+}
+
+function generateSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "")
+    .replace(/-+/g, "-");
 }
 
 export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
@@ -34,7 +44,8 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     slug: product?.slug || "",
     description: product?.description || "",
     status: product?.status || "active",
-    category: product?.category || "clinico",
+    category: (product?.category as Category) || "clinico",
+    subcategory: product?.subcategory || "",
   });
 
   const handleNameChange = (name: string) => {
@@ -185,7 +196,7 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
              </div>
            </div>
 
-          {/* Categoría y Estado */}
+          {/* Categoría y Subcategoría */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -194,9 +205,14 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
               <select
                 name="category"
                 value={formData.category}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, category: e.target.value }))
-                }
+                onChange={(e) => {
+                  const newCategory = e.target.value as Category;
+                  setFormData((prev) => ({ 
+                    ...prev, 
+                    category: newCategory,
+                    subcategory: "" // Reset subcategory when changing category
+                  }))
+                }}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all bg-white cursor-pointer"
               >
@@ -209,24 +225,46 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Estado *
+                Subcategoría (opcional)
               </label>
               <select
-                name="status"
-                value={formData.status}
+                name="subcategory"
+                value={formData.subcategory}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, status: e.target.value }))
+                  setFormData((prev) => ({ ...prev, subcategory: e.target.value }))
                 }
-                required
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all bg-white cursor-pointer"
               >
-                {STATUS_OPTIONS.map((status) => (
-                  <option key={status} value={status}>
-                    {STATUS_LABELS[status]}
+                <option value="">Seleccionar subcategoría...</option>
+                {SUBCATEGORIES[formData.category]?.map((sub) => (
+                  <option key={sub.slug} value={sub.slug}>
+                    {sub.name}
                   </option>
                 ))}
               </select>
             </div>
+          </div>
+
+          {/* Estado */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Estado *
+            </label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, status: e.target.value }))
+              }
+              required
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all bg-white cursor-pointer"
+            >
+              {STATUS_OPTIONS.map((status) => (
+                <option key={status} value={status}>
+                  {STATUS_LABELS[status]}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Imagen */}

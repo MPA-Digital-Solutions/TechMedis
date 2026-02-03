@@ -8,6 +8,18 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   veterinario: "Veterinario",
 };
 
+// Subcategorías por categoría
+export const SUBCATEGORIES: Record<Category, { id: string; name: string; slug: string }[]> = {
+  clinico: [
+    { id: "flat-panel", name: "Flat Panel", slug: "flat-panel" },
+    { id: "equipo-portatil", name: "Equipo Portátil", slug: "equipo-portatil" },
+  ],
+  veterinario: [
+    { id: "subcategoria-1", name: "Subcategoría 1", slug: "subcategoria-1" },
+    { id: "subcategoria-2", name: "Subcategoría 2", slug: "subcategoria-2" },
+  ],
+};
+
 export const STATUS_OPTIONS = ["active", "inactive"] as const;
 export type ProductStatus = (typeof STATUS_OPTIONS)[number];
 
@@ -28,6 +40,7 @@ export const createProductSchema = z.object({
   category: z.enum(CATEGORIES, {
     errorMap: () => ({ message: "Categoría inválida" }),
   }),
+  subcategory: z.string().optional().nullable(), // Slug de la subcategoría
   image: z.string().optional().nullable(),
   metadata: z.record(z.unknown()).optional().default({}),
 });
@@ -46,6 +59,7 @@ export interface Product {
   description: string;
   status: string;
   category: string;
+  subcategory: string | null;
   image: string | null;
   metadata: Record<string, unknown>;
   createdAt: Date;
