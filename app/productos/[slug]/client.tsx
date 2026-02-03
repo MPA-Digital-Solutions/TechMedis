@@ -53,7 +53,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
             </Link>
             <span className="text-gray-400">/</span>
             <Link 
-              href={product.category === "clinico" ? "/equipamientos-clinicos" : "/equipamiento-veterinario"} 
+              href={product.category === "clinico" ? "/equipamientos-medicos" : "/equipamiento-veterinario"} 
               className="text-techmedis-text hover:text-techmedis-primary transition-colors"
             >
               {product.category === "clinico" ? "Equipamientos Clínicos" : "Equipamiento Veterinario"}
@@ -62,7 +62,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
               <>
                 <span className="text-gray-400">/</span>
                 <Link 
-                  href={`/${product.category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`} 
+                  href={`/${product.category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`} 
                   className="text-techmedis-text hover:text-techmedis-primary transition-colors"
                 >
                   {subcategoryInfo.name}
@@ -80,8 +80,8 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link 
             href={product.subcategory 
-              ? `/${product.category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`
-              : `/${product.category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}`
+              ? `/${product.category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`
+              : `/${product.category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}`
             }
             className="inline-flex items-center text-techmedis-primary hover:text-techmedis-secondary mb-8 transition-colors"
           >

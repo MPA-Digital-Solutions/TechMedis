@@ -229,7 +229,7 @@ export default function HomePage() {
                     <Stethoscope className="w-8 h-8 text-blue-300" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold text-lg mb-1">Equipamiento Clínico</h3>
+                    <h3 className="text-white font-bold text-lg mb-1">Equipamiento Médico</h3>
                     <p className="text-white/70 text-sm">Tecnología de punta para diagnóstico y tratamiento en instituciones de salud.</p>
                   </div>
                 </div>
@@ -327,7 +327,7 @@ export default function HomePage() {
               <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
                 <img 
                   src="https://images.unsplash.com/photo-1516549655169-df83a0774514" 
-                  alt="Equipamiento Clínico" 
+                  alt="Equipamiento Médico" 
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
@@ -341,13 +341,13 @@ export default function HomePage() {
                   <span className="text-white/80 text-sm font-medium">Instituciones de Salud</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Equipamiento Clínico
+                  Equipamiento Médico
                 </h3>
                 <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
                   Tecnología avanzada para diagnóstico, monitoreo y tratamiento en hospitales y clínicas.
                 </p>
                 <Link 
-                  href="/equipamientos-clinicos"
+                  href="/equipamientos-medicos"
                   className="inline-flex items-center gap-2 bg-white text-techmedis-primary font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
                 >
                   Explorar Catálogo

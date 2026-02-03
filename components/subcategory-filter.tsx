@@ -14,11 +14,12 @@ export function SubcategoryFilter({ category }: SubcategoryFilterProps) {
 
   const handleFilterChange = (slug: string | null) => {
     if (slug) {
-      router.push(`?subcategory=${slug}`);
+      router.push(`?subcategory=${slug}`, { scroll: false });
     } else {
       // Limpiar el filtro completamente - ir a la URL sin parámetros
       router.push(
-        `/${category === "clinico" ? "equipamientos-clinicos" : "equipamiento-veterinario"}`
+        `/${category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}`,
+        { scroll: false }
       );
     }
   };

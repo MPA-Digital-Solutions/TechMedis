@@ -46,6 +46,7 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     status: product?.status || "active",
     category: (product?.category as Category) || "clinico",
     subcategory: product?.subcategory || "",
+    subcategory2: product?.subcategory2 || "",
   });
 
   const handleNameChange = (name: string) => {
@@ -196,8 +197,8 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
              </div>
            </div>
 
-          {/* Categoría y Subcategoría */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Categoría, Subcategoría y Subcategoría 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Categoría *
@@ -210,7 +211,8 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                   setFormData((prev) => ({ 
                     ...prev, 
                     category: newCategory,
-                    subcategory: "" // Reset subcategory when changing category
+                    subcategory: "", // Reset subcategory when changing category
+                    subcategory2: "" // Reset subcategory2 when changing category
                   }))
                 }}
                 required
@@ -231,7 +233,11 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                 name="subcategory"
                 value={formData.subcategory}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, subcategory: e.target.value }))
+                  setFormData((prev) => ({ 
+                    ...prev, 
+                    subcategory: e.target.value,
+                    subcategory2: "" // Reset subcategory2 when changing subcategory
+                  }))
                 }
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all bg-white cursor-pointer"
               >
@@ -241,6 +247,30 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                     {sub.name}
                   </option>
                 ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Subcategoría 2 (opcional)
+              </label>
+              <select
+                name="subcategory2"
+                value={formData.subcategory2}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, subcategory2: e.target.value }))
+                }
+                disabled={!formData.subcategory}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all bg-white cursor-pointer disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                <option value="">Seleccionar subcategoría 2...</option>
+                {formData.subcategory &&
+                  SUBCATEGORIES[formData.category]
+                    ?.find((sub) => sub.slug === formData.subcategory)
+                    ?.items?.map((item) => (
+                      <option key={item.slug} value={item.slug}>
+                        {item.name}
+                      </option>
+                    ))}
               </select>
             </div>
           </div>

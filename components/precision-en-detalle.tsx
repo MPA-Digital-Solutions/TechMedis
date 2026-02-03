@@ -54,7 +54,7 @@ export function PrecisionEnDetalle() {
           transition={{ duration: 0.32, delay: 0.4, ease: "easeOut" }}
           className="text-center mt-16"
         >
-          <CTAButton variant="primary" to="/equipamientos-clinicos">
+          <CTAButton variant="primary" to="/equipamientos-medicos">
             Ver equipamiento
           </CTAButton>
         </motion.div>

@@ -9,17 +9,18 @@ import { SUBCATEGORIES } from "@/lib/validations/product";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Equipamientos Clínicos - Techmedis",
+  title: "Equipamiento Médico - Techmedis",
   description: "Catálogo de equipamiento médico clínico. Tecnología de vanguardia para diagnóstico y tratamiento.",
 };
 
 interface PageProps {
-  searchParams: Promise<{ subcategory?: string }>;
+  searchParams: Promise<{ subcategory?: string; subcategory2?: string }>;
 }
 
 export default async function EquiposClinicosPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const selectedSubcategory = params.subcategory;
+  const selectedSubcategory2 = params.subcategory2;
 
   const [products, whatsappNumber] = await Promise.all([
     getProducts({ category: "clinico", status: "active" }),
@@ -28,7 +29,13 @@ export default async function EquiposClinicosPage({ searchParams }: PageProps) {
 
   // Filtrar productos por subcategoría si se seleccionó una
   const filteredProducts = selectedSubcategory
-    ? products.filter((product) => product.subcategory === selectedSubcategory)
+    ? products.filter((product) => {
+        const matchesSubcategory = product.subcategory === selectedSubcategory;
+        if (selectedSubcategory2) {
+          return matchesSubcategory && product.subcategory2 === selectedSubcategory2;
+        }
+        return matchesSubcategory;
+      })
     : products;
 
   // Obtener el nombre de la subcategoría seleccionada
@@ -44,7 +51,7 @@ export default async function EquiposClinicosPage({ searchParams }: PageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-display text-white mb-6">
-                Equipamientos Clínicos
+                Equipamiento Médico
                 {selectedSubcategoryObj && (
                   <span className="block text-2xl font-normal text-white/80 mt-2">
                     {selectedSubcategoryObj.name}
@@ -71,11 +78,15 @@ export default async function EquiposClinicosPage({ searchParams }: PageProps) {
       <section className="py-16 md:py-24 bg-techmedis-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Filtro de Subcategorías */}
-          <SubcategoryFilterClient category="clinico" currentSubcategory={selectedSubcategory} />
+          <SubcategoryFilterClient 
+            category="clinico" 
+            currentSubcategory={selectedSubcategory}
+            currentSubcategory2={selectedSubcategory2}
+          />
 
           <ProductsGrid 
             products={filteredProducts} 
-            emptyMessage="No hay equipamientos clínicos disponibles en esta subcategoría."
+            emptyMessage="No hay equipamientos médicos disponibles en esta subcategoría."
             whatsappNumber={whatsappNumber}
           />
         </div>

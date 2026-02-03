@@ -35,7 +35,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/equipamientos-clinicos" className="text-white/80 hover:text-white transition-colors duration-300 text-sm">
+                <Link href="/equipamientos-medicos" className="text-white/80 hover:text-white transition-colors duration-300 text-sm">
                   Equipamiento Clínico
                 </Link>
               </li>

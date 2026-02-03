@@ -21,6 +21,8 @@ interface PrismaProductRaw {
   description: string;
   status: string;
   category: string;
+  subcategory?: string | null;
+  subcategory2?: string | null;
   image: string | null;
   metadata: unknown;
   createdAt: Date;
@@ -39,6 +41,7 @@ export async function createProduct(
 ): Promise<ActionResponse<{ id: string }>> {
   try {
     const subcategorySlug = formData.get("subcategory") as string;
+    const subcategory2Slug = formData.get("subcategory2") as string;
     
     const rawData = {
       name: formData.get("name") as string,
@@ -50,6 +53,7 @@ export async function createProduct(
       status: formData.get("status") as string,
       category: formData.get("category") as string,
       subcategory: subcategorySlug && subcategorySlug.trim() !== "" ? subcategorySlug : null,
+      subcategory2: subcategory2Slug && subcategory2Slug.trim() !== "" ? subcategory2Slug : null,
       image: null as string | null,
     };
     const imageFile = formData.get("image") as File | null;
@@ -76,7 +80,7 @@ export async function createProduct(
 
     // Revalidar páginas que muestran productos
     revalidatePath("/admin");
-    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamientos-medicos");
     revalidatePath("/equipamiento-veterinario");
 
     return { success: true, data: { id: product.id } };
@@ -96,6 +100,7 @@ export async function updateProduct(
   try {
     const id = formData.get("id") as string;
     const subcategorySlug = formData.get("subcategory") as string;
+    const subcategory2Slug = formData.get("subcategory2") as string;
     
     const rawData: UpdateProductInput = {
       id,
@@ -105,6 +110,7 @@ export async function updateProduct(
       status: formData.get("status") as "active" | "inactive",
       category: formData.get("category") as "clinico" | "veterinario",
       subcategory: subcategorySlug && subcategorySlug.trim() !== "" ? subcategorySlug : null,
+      subcategory2: subcategory2Slug && subcategory2Slug.trim() !== "" ? subcategory2Slug : null,
     };
 
     const imageFile = formData.get("image") as File | null;
@@ -159,7 +165,7 @@ const { id: productId, metadata, ...restUpdateData } = validated;
 
     // Revalidar páginas que muestran productos
     revalidatePath("/admin");
-    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamientos-medicos");
     revalidatePath("/equipamiento-veterinario");
     revalidatePath(`/productos/${validated.slug}`);
 
@@ -191,7 +197,7 @@ export async function deleteProduct(id: string): Promise<ActionResponse> {
 
     // Revalidar páginas que muestran productos
     revalidatePath("/admin");
-    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamientos-medicos");
     revalidatePath("/equipamiento-veterinario");
 
     return { success: true };
@@ -357,7 +363,7 @@ export async function toggleProductStatus(
 
     // Revalidar páginas que muestran productos
     revalidatePath("/admin");
-    revalidatePath("/equipamientos-clinicos");
+    revalidatePath("/equipamientos-medicos");
     revalidatePath("/equipamiento-veterinario");
 
     return { success: true };

@@ -14,12 +14,13 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: Promise<{ subcategory?: string }>;
+  searchParams: Promise<{ subcategory?: string; subcategory2?: string }>;
 }
 
 export default async function EquipoVeterinarioPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const selectedSubcategory = params.subcategory;
+  const selectedSubcategory2 = params.subcategory2;
 
   const [products, whatsappNumber] = await Promise.all([
     getProducts({ category: "veterinario", status: "active" }),
@@ -28,7 +29,13 @@ export default async function EquipoVeterinarioPage({ searchParams }: PageProps)
 
   // Filtrar productos por subcategoría si se seleccionó una
   const filteredProducts = selectedSubcategory
-    ? products.filter((product) => product.subcategory === selectedSubcategory)
+    ? products.filter((product) => {
+        const matchesSubcategory = product.subcategory === selectedSubcategory;
+        if (selectedSubcategory2) {
+          return matchesSubcategory && product.subcategory2 === selectedSubcategory2;
+        }
+        return matchesSubcategory;
+      })
     : products;
 
   // Obtener el nombre de la subcategoría seleccionada
@@ -71,7 +78,11 @@ export default async function EquipoVeterinarioPage({ searchParams }: PageProps)
       <section className="py-16 md:py-24 bg-techmedis-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Filtro de Subcategorías */}
-          <SubcategoryFilterClient category="veterinario" currentSubcategory={selectedSubcategory} />
+          <SubcategoryFilterClient 
+            category="veterinario" 
+            currentSubcategory={selectedSubcategory}
+            currentSubcategory2={selectedSubcategory2}
+          />
 
           <ProductsGrid 
             products={filteredProducts} 

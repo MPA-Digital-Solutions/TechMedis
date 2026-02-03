@@ -15,7 +15,8 @@ model Product {
   description     String   @db.Text
   status          String   @default("active") @db.VarChar(50) // Valores: "active", "inactive"
   category        String   @db.VarChar(100) // Valores permitidos: "clinico", "veterinario"
-  subcategory     String?  @db.VarChar(255) // Slug de la subcategoría (ej: "flat-panel")
+  subcategory     String?  @db.VarChar(255) // Slug de la subcategoría nivel 1 (ej: "digitalizacion-por-imagenes")
+  subcategory2    String?  @db.VarChar(255) // Slug de la subcategoría nivel 2 (ej: "digitalizacion-directa")
   image           String?  @db.VarChar(255) // Ruta a la imagen en carpeta public
   
   metadata        Json     @default("{}")
@@ -26,6 +27,7 @@ model Product {
   @@index([status])
   @@index([category, status])
   @@index([subcategory])
+  @@index([subcategory2])
 }
 
 model Config {

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Rutas que deben ser revalidadas cuando cambian los productos
 const PRODUCT_PATHS = [
   "/",
-  "/equipamientos-clinicos",
+  "/equipamientos-medicos",
   "/equipamiento-veterinario",
 ];
 

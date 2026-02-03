@@ -11,12 +11,12 @@ import { MobileCategoryDropdown } from "@/components/mobile-category-dropdown";
 
 const navLinks = [
   { path: "/", label: "Inicio" },
-  { path: "/services", label: "Services" },
+  { path: "/services", label: "Servicio Técnico" },
   { path: "/sobre-nosotros", label: "Nosotros" },
 ];
 
 const categoryLinks = [
-  { category: "clinico" as const, label: "Clínico" },
+  { category: "clinico" as const, label: "Equipamiento Médico" },
   { category: "veterinario" as const, label: "Veterinario" },
 ];
 
@@ -98,13 +98,13 @@ export function Navbar() {
               )}
             </Link>
 
-            {/* Clínico con Dropdown */}
-            <CategoryDropdown category="clinico" label="Clínico" pathname={pathname} />
+            {/* Equipamiento Médico con Dropdown */}
+            <CategoryDropdown category="clinico" label="Equipamiento Médico" pathname={pathname} />
 
             {/* Veterinario con Dropdown */}
             <CategoryDropdown category="veterinario" label="Veterinario" pathname={pathname} />
 
-            {/* Services */}
+            {/* Servicio Técnico */}
             <Link
               href="/services"
               className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
@@ -113,7 +113,7 @@ export function Navbar() {
                   : "text-white/80 hover:text-white"
               }`}
             >
-              Services
+              Servicio Técnico
               {pathname === "/services" && (
                 <motion.div
                   layoutId="underline"
@@ -182,7 +182,7 @@ export function Navbar() {
               {/* Mobile Category Dropdowns */}
               <MobileCategoryDropdown 
                 category="clinico" 
-                label="Clínico" 
+                label="Equipamiento Médico" 
                 onClose={handleLinkClick}
               />
               <MobileCategoryDropdown 
@@ -191,7 +191,7 @@ export function Navbar() {
                 onClose={handleLinkClick}
               />
 
-              {/* Services */}
+              {/* Servicio Técnico */}
               <Link
                 href="/services"
                 onClick={handleLinkClick}
@@ -201,7 +201,7 @@ export function Navbar() {
                     : "text-white/80 hover:bg-white/10 hover:text-white"
                 }`}
               >
-                Services
+                Servicio Técnico
               </Link>
 
               {/* Nosotros */}
