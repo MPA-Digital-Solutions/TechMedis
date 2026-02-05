@@ -22,10 +22,10 @@ export function SubcategoryFilterClient({ category, currentSubcategory, currentS
   const hasNestedItems = selectedSubcategoryObj?.items && selectedSubcategoryObj.items.length > 0;
 
   const handleFilterChange = (slug: string | null, slug2?: string | null) => {
-    const categoryPath = `/${category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}`;
-    
+    const categoryPath = `/productos/${category}`;
+
     if (slug) {
-      let path = `?subcategory=${slug}`;
+      let path = `${categoryPath}?subcategory=${slug}`;
       // Solo agregar subcategory2 si se proporciona explícitamente
       if (slug2 !== undefined && slug2 !== null) {
         path += `&subcategory2=${slug2}`;
@@ -44,11 +44,10 @@ export function SubcategoryFilterClient({ category, currentSubcategory, currentS
         {/* Ver todas */}
         <button
           onClick={() => handleFilterChange(null)}
-          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${
-            !currentSubcategory
-              ? "bg-techmedis-primary text-white shadow-lg"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
+          className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer ${!currentSubcategory
+            ? "bg-techmedis-primary text-white shadow-lg"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
         >
           Ver todas
         </button>
@@ -58,11 +57,10 @@ export function SubcategoryFilterClient({ category, currentSubcategory, currentS
           <button
             key={sub.slug}
             onClick={() => handleFilterChange(sub.slug)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer hover:scale-105 ${
-              currentSubcategory === sub.slug
-                ? "bg-techmedis-primary text-white shadow-lg"
-                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-            }`}
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer hover:scale-105 ${currentSubcategory === sub.slug
+              ? "bg-techmedis-primary text-white shadow-lg"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
           >
             {sub.name}
             {sub.items && sub.items.length > 0 && (
@@ -77,12 +75,11 @@ export function SubcategoryFilterClient({ category, currentSubcategory, currentS
         <div className="flex flex-wrap gap-3 pl-4 border-l-4 border-techmedis-primary">
           {/* Opción para solo esta subcategoría nivel 1 */}
           <button
-            onClick={() => handleFilterChange(currentSubcategory)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${
-              currentSubcategory && !currentSubcategory2
-                ? "bg-techmedis-secondary text-white shadow-lg"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
+            onClick={() => handleFilterChange(currentSubcategory ?? null)}
+            className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${currentSubcategory && !currentSubcategory2
+              ? "bg-techmedis-secondary text-white shadow-lg"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
           >
             {selectedSubcategoryObj?.name} (todos)
           </button>
@@ -91,12 +88,11 @@ export function SubcategoryFilterClient({ category, currentSubcategory, currentS
           {selectedSubcategoryObj?.items?.map((item) => (
             <button
               key={item.slug}
-              onClick={() => handleFilterChange(currentSubcategory, item.slug)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${
-                currentSubcategory2 === item.slug
-                  ? "bg-techmedis-secondary text-white shadow-lg"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+              onClick={() => handleFilterChange(currentSubcategory ?? null, item.slug)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm ${currentSubcategory2 === item.slug
+                ? "bg-techmedis-secondary text-white shadow-lg"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
             >
               {item.name}
             </button>

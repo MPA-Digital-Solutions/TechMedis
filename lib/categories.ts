@@ -3,12 +3,14 @@
  * Este archivo contiene toda la estructura de categorías con soporte para niveles múltiples
  */
 
-export const CATEGORIES = ["clinico", "veterinario"] as const;
+export const CATEGORIES = ["radiologia", "mamografia", "impresoras-peliculas", "sistemas-pac-ris"] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<Category, string> = {
-  clinico: "Equipamiento Médico",
-  veterinario: "Veterinario",
+  radiologia: "Radiología",
+  mamografia: "Mamografía",
+  "impresoras-peliculas": "Impresoras de Películas",
+  "sistemas-pac-ris": "Sistemas PAC RIS",
 };
 
 /**
@@ -28,32 +30,39 @@ export const SUBCATEGORIES: Record<
     items?: { id: string; name: string; slug: string }[];
   }[]
 > = {
-  clinico: [
+  radiologia: [
     {
-      id: "digitalizacion-por-imagenes",
-      name: "Digitalización por Imágenes",
-      slug: "digitalizacion-por-imagenes",
-      items: [
-        {
-          id: "digitalizacion-directa",
-          name: "Digitalización Directa",
-          slug: "digitalizacion-directa",
-        },
-        {
-          id: "digitalizacion-indirecta",
-          name: "Digitalización Indirecta",
-          slug: "digitalizacion-indirecta",
-        },
-      ],
+      id: "equipos-de-rayos-x",
+      name: "Equipos de Rayos X",
+      slug: "equipos-de-rayos-x",
     },
     {
-      id: "subcategoria-2",
-      name: "Subcategoría 2",
-      slug: "subcategoria-2",
+      id: "digitalizadores-directos",
+      name: "Digitalizadores Directos",
+      slug: "digitalizadores-directos",
+    },
+    {
+      id: "digitalizadores-indirectos",
+      name: "Digitalizadores Indirectos",
+      slug: "digitalizadores-indirectos",
     },
   ],
-  veterinario: [
-    { id: "subcategoria-1", name: "Subcategoría 1", slug: "subcategoria-1" },
-    { id: "subcategoria-2", name: "Subcategoría 2", slug: "subcategoria-2" },
+  mamografia: [
+    {
+      id: "mamografos",
+      name: "Mamografos",
+      slug: "mamografos",
+    },
+    {
+      id: "digitalizadores",
+      name: "Digitalizadores",
+      slug: "digitalizadores",
+    },
+  ],
+  "impresoras-peliculas": [
+    // Agregar subcategorías aquí
+  ],
+  "sistemas-pac-ris": [
+    // Agregar subcategorías aquí
   ],
 };

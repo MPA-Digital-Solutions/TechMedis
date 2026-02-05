@@ -6,18 +6,13 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CTAButton } from "@/components/cta-button";
-import { CategoryDropdown } from "@/components/category-dropdown";
-import { MobileCategoryDropdown } from "@/components/mobile-category-dropdown";
+import { ProductsDropdown } from "@/components/products-dropdown";
+import { MobileProductsDropdown } from "@/components/mobile-products-dropdown";
 
 const navLinks = [
   { path: "/", label: "Inicio" },
   { path: "/services", label: "Servicio Técnico" },
   { path: "/sobre-nosotros", label: "Nosotros" },
-];
-
-const categoryLinks = [
-  { category: "clinico" as const, label: "Equipamiento Médico" },
-  { category: "veterinario" as const, label: "Veterinario" },
 ];
 
 export function Navbar() {
@@ -29,27 +24,27 @@ export function Navbar() {
   // Scroll handler optimizado con requestAnimationFrame
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
           const isScrollingDown = currentScrollY > lastScrollY.current;
-          
+
           // Hide navbar when scrolling down past 100px, show when scrolling up
           if (isScrollingDown && currentScrollY > 100) {
             setIsVisible(false);
           } else {
             setIsVisible(true);
           }
-          
+
           lastScrollY.current = currentScrollY;
           ticking = false;
         });
         ticking = true;
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -59,10 +54,9 @@ export function Navbar() {
   };
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 bg-techmedis-primary transition-transform duration-300 ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 bg-techmedis-primary transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex justify-between items-center">
@@ -70,9 +64,9 @@ export function Navbar() {
           <Link href="/" className="flex items-center">
             <picture>
               <source srcSet="/images/logo.webp" type="image/webp" />
-              <img 
-                src="/images/logo.png" 
-                alt="Techmedis" 
+              <img
+                src="/images/logo.png"
+                alt="Techmedis"
                 className="h-16 w-auto hover:scale-105 hover:opacity-90 transition-transform duration-300"
               />
             </picture>
@@ -83,11 +77,10 @@ export function Navbar() {
             {/* Inicio */}
             <Link
               href="/"
-              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
-                pathname === "/"
+              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/"
                   ? "text-white"
                   : "text-white/80 hover:text-white"
-              }`}
+                }`}
             >
               Inicio
               {pathname === "/" && (
@@ -98,20 +91,16 @@ export function Navbar() {
               )}
             </Link>
 
-            {/* Equipamiento Médico con Dropdown */}
-            <CategoryDropdown category="clinico" label="Equipamiento Médico" pathname={pathname} />
-
-            {/* Veterinario con Dropdown */}
-            <CategoryDropdown category="veterinario" label="Veterinario" pathname={pathname} />
+            {/* Productos con Dropdown */}
+            <ProductsDropdown pathname={pathname} />
 
             {/* Servicio Técnico */}
             <Link
               href="/services"
-              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
-                pathname === "/services"
+              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/services"
                   ? "text-white"
                   : "text-white/80 hover:text-white"
-              }`}
+                }`}
             >
               Servicio Técnico
               {pathname === "/services" && (
@@ -125,11 +114,10 @@ export function Navbar() {
             {/* Nosotros */}
             <Link
               href="/sobre-nosotros"
-              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${
-                pathname === "/sobre-nosotros"
+              className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/sobre-nosotros"
                   ? "text-white"
                   : "text-white/80 hover:text-white"
-              }`}
+                }`}
             >
               Nosotros
               {pathname === "/sobre-nosotros" && (
@@ -139,7 +127,7 @@ export function Navbar() {
                 />
               )}
             </Link>
-            
+
             <CTAButton variant="outline" to="/contacto" className="px-5 py-2 text-sm border-white text-techmedis-primary bg-white hover:bg-white/90">
               Contactar
             </CTAButton>
@@ -170,36 +158,25 @@ export function Navbar() {
               <Link
                 href="/"
                 onClick={handleLinkClick}
-                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
-                  pathname === "/"
+                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${pathname === "/"
                     ? "bg-white/20 text-white"
                     : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                  }`}
               >
                 Inicio
               </Link>
 
-              {/* Mobile Category Dropdowns */}
-              <MobileCategoryDropdown 
-                category="clinico" 
-                label="Equipamiento Médico" 
-                onClose={handleLinkClick}
-              />
-              <MobileCategoryDropdown 
-                category="veterinario" 
-                label="Veterinario" 
-                onClose={handleLinkClick}
-              />
+              {/* Mobile Products Dropdown */}
+              <MobileProductsDropdown onClose={handleLinkClick} />
 
               {/* Servicio Técnico */}
               <Link
                 href="/services"
                 onClick={handleLinkClick}
-                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
-                  pathname === "/services"
+                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${pathname === "/services"
                     ? "bg-white/20 text-white"
                     : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                  }`}
               >
                 Servicio Técnico
               </Link>
@@ -208,11 +185,10 @@ export function Navbar() {
               <Link
                 href="/sobre-nosotros"
                 onClick={handleLinkClick}
-                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${
-                  pathname === "/sobre-nosotros"
+                className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${pathname === "/sobre-nosotros"
                     ? "bg-white/20 text-white"
                     : "text-white/80 hover:bg-white/10 hover:text-white"
-                }`}
+                  }`}
               >
                 Nosotros
               </Link>

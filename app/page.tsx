@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { 
-  ClipboardList, 
-  Wrench, 
-  Shield, 
-  Headphones, 
-  ArrowRight, 
+import {
+  ClipboardList,
+  Wrench,
+  Shield,
+  Headphones,
+  ArrowRight,
   Sparkles,
   Stethoscope,
   Heart,
@@ -35,21 +35,21 @@ const stats = [
 // Hook para detectar si debe reducir animaciones (mobile o preferencia del usuario)
 function useReducedMotion() {
   const [shouldReduce, setShouldReduce] = useState(false);
-  
+
   useEffect(() => {
     // Detectar preferencia del usuario
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     // Detectar mobile (menos de 768px)
     const isMobile = window.innerWidth < 768;
-    
+
     setShouldReduce(mediaQuery.matches || isMobile);
-    
+
     const handler = (e: MediaQueryListEvent) => setShouldReduce(e.matches || isMobile);
     mediaQuery.addEventListener('change', handler);
-    
+
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
-  
+
   return shouldReduce;
 }
 
@@ -78,11 +78,11 @@ export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const [buttonOpacity, setButtonOpacity] = useState(1);
-  
+
   // Scroll handler optimizado con requestAnimationFrame
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -97,7 +97,7 @@ export default function HomePage() {
         ticking = true;
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -109,32 +109,32 @@ export default function HomePage() {
   return (
     <>
       {/* 1. HERO SECTION - Con CSS parallax optimizado */}
-      <section 
+      <section
         ref={heroRef}
         className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
         {/* Background Image - CSS parallax en lugar de Framer Motion */}
         <div className="absolute inset-0 z-0 will-change-transform" style={{ transform: 'translateZ(-1px) scale(1.5)' }}>
           {/* Imagen de fondo */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed"
             style={{ backgroundImage: "url('/images/font-home.jpg')" }}
           />
-          
+
           {/* Gradient overlay azul desde abajo izquierda */}
           <div className="absolute inset-0 bg-gradient-to-tr from-techmedis-primary via-techmedis-primary/75 to-techmedis-primary/30" />
-          
+
           {/* Extra blur en la sección inferior */}
           <div className="absolute bottom-0 left-0 w-full h-4/5 bg-gradient-to-t from-techmedis-primary via-techmedis-secondary/85 to-transparent blur-3xl" />
-          
+
           {/* Overlay adicional de color azul */}
           <div className="absolute inset-0 bg-techmedis-primary/40" />
-          
+
           {/* Overlay oscuro sutil */}
           <div className="absolute inset-0 bg-black/20" />
 
           {/* Grid Pattern Overlay */}
-          <div 
+          <div
             className="absolute inset-0 opacity-5"
             style={{
               backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
@@ -186,29 +186,29 @@ export default function HomePage() {
                 initial={animFadeInUp.hidden}
                 animate={animFadeInUp.visible}
                 transition={{ duration: 0.5, delay: reduceMotion ? 0 : 0.2 }}
-                 className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center lg:justify-start items-stretch sm:items-center"
+                className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center lg:justify-start items-stretch sm:items-center"
               >
-                <div 
+                <div
                   style={{ opacity: buttonOpacity }}
-                   className="flex transition-opacity duration-100"
+                  className="flex transition-opacity duration-100"
                 >
-                  <Link 
+                  <Link
                     href="/contacto"
-                     className="group flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl flex-1 sm:flex-none"
+                    className="group flex items-center justify-center gap-2 bg-white text-techmedis-primary font-bold px-8 py-4 rounded-xl hover:bg-white/90 transition-all shadow-lg hover:shadow-xl flex-1 sm:flex-none"
                   >
-                     <Phone className="w-5 h-5 flex-shrink-0" />
-                     <span>Solicitar Asesoría</span>
-                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                    <Phone className="w-5 h-5 flex-shrink-0" />
+                    <span>Solicitar Asesoría</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
                   </Link>
                 </div>
-                <button 
+                <button
                   onClick={() => {
-                    document.getElementById('catalogo-section')?.scrollIntoView({ 
+                    document.getElementById('catalogo-section')?.scrollIntoView({
                       behavior: 'smooth',
                       block: 'start'
                     });
                   }}
-                   className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-all cursor-pointer flex-1 sm:flex-none"
+                  className="flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/20 transition-all cursor-pointer flex-1 sm:flex-none"
                 >
                   Ver Catálogo
                 </button>
@@ -222,36 +222,65 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="hidden lg:grid grid-cols-2 gap-4"
             >
-              {/* Feature Card 1 */}
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 col-span-2 hover:bg-white/15 transition-colors duration-300">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-blue-500/20 rounded-xl">
-                    <Stethoscope className="w-8 h-8 text-blue-300" />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold text-lg mb-1">Equipamiento Médico</h3>
-                    <p className="text-white/70 text-sm">Tecnología de punta para diagnóstico y tratamiento en instituciones de salud.</p>
-                  </div>
+              {/* Feature Card 1 - Radiología */}
+              <button
+                onClick={() => {
+                  const card = document.getElementById('card-radiologia');
+                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
+              >
+                <div className="p-3 bg-blue-500/20 rounded-xl w-fit mb-3">
+                  <Stethoscope className="w-6 h-6 text-blue-300" />
                 </div>
-              </div>
+                <h3 className="text-white font-bold mb-1">Radiología</h3>
+                <p className="text-white/70 text-sm">Equipos de diagnóstico por imágenes de última generación.</p>
+              </button>
 
-              {/* Feature Card 2 */}
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300">
-                <div className="p-3 bg-emerald-500/20 rounded-xl w-fit mb-3">
-                  <Heart className="w-6 h-6 text-emerald-300" />
+              {/* Feature Card 2 - Mamografía */}
+              <button
+                onClick={() => {
+                  const card = document.getElementById('card-mamografia');
+                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
+              >
+                <div className="p-3 bg-pink-500/20 rounded-xl w-fit mb-3">
+                  <Heart className="w-6 h-6 text-pink-300" />
                 </div>
-                <h3 className="text-white font-bold mb-1">Veterinario</h3>
-                <p className="text-white/70 text-sm">Equipos especializados para el cuidado animal.</p>
-              </div>
+                <h3 className="text-white font-bold mb-1">Mamografía</h3>
+                <p className="text-white/70 text-sm">Sistemas avanzados para detección temprana.</p>
+              </button>
 
-              {/* Feature Card 3 */}
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300">
+              {/* Feature Card 3 - Impresoras */}
+              <button
+                onClick={() => {
+                  const card = document.getElementById('card-impresoras');
+                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
+              >
                 <div className="p-3 bg-amber-500/20 rounded-xl w-fit mb-3">
                   <Award className="w-6 h-6 text-amber-300" />
                 </div>
-                <h3 className="text-white font-bold mb-1">Certificados</h3>
-                <p className="text-white/70 text-sm">Calidad garantizada con estándares internacionales.</p>
-              </div>
+                <h3 className="text-white font-bold mb-1">Impresoras</h3>
+                <p className="text-white/70 text-sm">Impresoras de películas médicas de alta resolución.</p>
+              </button>
+
+              {/* Feature Card 4 - PAC RIS */}
+              <button
+                onClick={() => {
+                  const card = document.getElementById('card-pacris');
+                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
+              >
+                <div className="p-3 bg-emerald-500/20 rounded-xl w-fit mb-3">
+                  <Stethoscope className="w-6 h-6 text-emerald-300" />
+                </div>
+                <h3 className="text-white font-bold mb-1">Sistemas PAC RIS</h3>
+                <p className="text-white/70 text-sm">Gestión integral de imágenes médicas.</p>
+              </button>
             </motion.div>
           </div>
         </div>
@@ -310,45 +339,46 @@ export default function HomePage() {
               Equipamiento Especializado
             </h2>
             <p className="text-lg text-techmedis-text/80 max-w-2xl mx-auto">
-              Soluciones tecnológicas diseñadas para cada necesidad médica y veterinaria
+              Soluciones tecnológicas de vanguardia en radiología digital y gestión de imágenes médicas
             </p>
           </motion.div>
 
-          {/* Cards */}
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-            {/* Card Clínico */}
-            <motion.div 
+          {/* Cards - Grid 2x2 en desktop, apiladas en mobile */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+            {/* Card Radiología */}
+            <motion.div
               initial={animFadeInUp.hidden}
               whileInView={animFadeInUp.visible}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.4 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300 flex-1"
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              id="card-radiologia"
             >
               <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1516549655169-df83a0774514" 
-                  alt="Equipamiento Médico" 
+                <img
+                  src="/images/radiologiacard.webp"
+                  alt="Radiología"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-techmedis-primary/90 via-techmedis-primary/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-700/90 via-blue-600/40 to-transparent" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
                     <Stethoscope className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-white/80 text-sm font-medium">Instituciones de Salud</span>
+                  <span className="text-white/80 text-sm font-medium">Diagnóstico por Imágenes</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Equipamiento Médico
+                  Radiología
                 </h3>
                 <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
-                  Tecnología avanzada para diagnóstico, monitoreo y tratamiento en hospitales y clínicas.
+                  Equipos de radiología de última generación para diagnóstico por imágenes con la más alta calidad.
                 </p>
-                <Link 
-                  href="/equipamientos-medicos"
-                  className="inline-flex items-center gap-2 bg-white text-techmedis-primary font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
+                <Link
+                  href="/productos/radiologia"
+                  className="inline-flex items-center gap-2 bg-white text-blue-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
                 >
                   Explorar Catálogo
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -356,39 +386,122 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            {/* Card Veterinario */}
-            <motion.div 
+            {/* Card Mamografía */}
+            <motion.div
               initial={animFadeInUp.hidden}
               whileInView={animFadeInUp.visible}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.1 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300 flex-1"
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              id="card-mamografia"
             >
               <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def" 
-                  alt="Equipamiento Veterinario" 
+                <img
+                  src="/images/mamografiacard.webp"
+                  alt="Mamografía"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-teal-600/90 via-teal-600/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-pink-700/90 via-pink-600/40 to-transparent" />
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
                     <Heart className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-white/80 text-sm font-medium">Centros Veterinarios</span>
+                  <span className="text-white/80 text-sm font-medium">Detección Temprana</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Equipamiento Veterinario
+                  Mamografía
                 </h3>
                 <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
-                  Equipos especializados para el cuidado y diagnóstico animal de alta calidad.
+                  Sistemas de mamografía avanzados para detección temprana y diagnóstico preciso.
                 </p>
-                <Link 
-                  href="/equipamiento-veterinario"
-                  className="inline-flex items-center gap-2 bg-white text-teal-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
+                <Link
+                  href="/productos/mamografia"
+                  className="inline-flex items-center gap-2 bg-white text-pink-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
+                >
+                  Explorar Catálogo
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Card Impresoras de Películas */}
+            <motion.div
+              initial={animFadeInUp.hidden}
+              whileInView={animFadeInUp.visible}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.2 }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              id="card-impresoras"
+            >
+              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
+                <img
+                  src="/images/impresorapelicacard.webp"
+                  alt="Impresoras de Películas"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-700/90 via-amber-600/40 to-transparent" />
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <Award className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Impresión Médica</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
+                  Impresoras de Películas
+                </h3>
+                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
+                  Impresoras de películas médicas con tecnología de punta para imágenes de alta resolución.
+                </p>
+                <Link
+                  href="/productos/impresoras-peliculas"
+                  className="inline-flex items-center gap-2 bg-white text-amber-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
+                >
+                  Explorar Catálogo
+                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Card Sistemas PAC RIS */}
+            <motion.div
+              initial={animFadeInUp.hidden}
+              whileInView={animFadeInUp.visible}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.3 }}
+              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
+              id="card-pacris"
+            >
+              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
+                <img
+                  src="/images/sistemapacriscard.webp"
+                  alt="Sistemas PAC RIS"
+                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-emerald-700/90 via-emerald-600/40 to-transparent" />
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <Stethoscope className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-white/80 text-sm font-medium">Gestión de Imágenes</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
+                  Sistemas PAC RIS
+                </h3>
+                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
+                  Soluciones integrales de PACS y RIS para gestión de imágenes médicas.
+                </p>
+                <Link
+                  href="/productos/sistemas-pac-ris"
+                  className="inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
                 >
                   Explorar Catálogo
                   <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -469,7 +582,7 @@ export default function HomePage() {
             <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
               Nuestro equipo de expertos está listo para asesorarlo y encontrar la solución perfecta para sus necesidades.
             </p>
-             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-stretch sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center items-stretch sm:items-center">
               <CTAButton variant="outline" to="/contacto">
                 <span className="flex items-center gap-2">
                   <Phone className="w-5 h-5" />
