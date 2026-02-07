@@ -10,15 +10,28 @@ interface ContactoClientProps {
   whatsappNumber: string;
 }
 
-const contactInfo = [
-  { icon: <Phone size={24} />, label: "+1 (555) 123-4567" },
-  { icon: <Mail size={24} />, label: "info@techmedis.com" },
-  { icon: <MapPin size={24} />, label: "Av. Principal 123, Ciudad" },
-];
+// Format phone number for display (e.g., 5491112345678 -> +54 9 11 1234-5678)
+function formatPhoneForDisplay(phone: string): string {
+  // Remove any non-numeric characters
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length >= 10) {
+    // Format as international number
+    return `+${cleaned.slice(0, 2)} ${cleaned.slice(2, 3)} ${cleaned.slice(3, 5)} ${cleaned.slice(5, 9)}-${cleaned.slice(9)}`;
+  }
+  return `+${cleaned}`;
+}
 
 export default function ContactoClient({ whatsappNumber }: ContactoClientProps) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Contact info with dynamic phone number
+  const contactInfo = [
+    { icon: <Phone size={24} />, label: formatPhoneForDisplay(whatsappNumber), href: `tel:+${whatsappNumber.replace(/\D/g, '')}` },
+    { icon: <Mail size={24} />, label: "info@techmedis.com", href: "mailto:info@techmedis.com" },
+    { icon: <MapPin size={24} />, label: "Av. Principal 123, Ciudad", href: null },
+  ];
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -47,7 +60,7 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
     }
 
     setIsSubmitting(true);
-    
+
     try {
       // Save contact to database
       const result = await createClient({
@@ -103,7 +116,7 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
     <section className="py-24 md:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-          
+
           {/* Contact Info Side */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -114,12 +127,18 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
             <p className="text-xl text-techmedis-text mb-12 leading-relaxed font-light">
               Estamos aquí para responder sus consultas técnicas, comerciales o de soporte. Complete el formulario y nuestro equipo especializado le responderá con prioridad.
             </p>
-            
+
             <div className="space-y-8 mb-16">
               {contactInfo.map((item, index) => (
                 <div key={index} className="flex items-center space-x-6 text-techmedis-text">
                   <div className="text-techmedis-secondary p-3 bg-techmedis-light rounded-full">{item.icon}</div>
-                  <span className="text-lg font-medium">{item.label}</span>
+                  {item.href ? (
+                    <a href={item.href} className="text-lg font-medium hover:text-techmedis-primary transition-colors">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <span className="text-lg font-medium">{item.label}</span>
+                  )}
                 </div>
               ))}
             </div>
