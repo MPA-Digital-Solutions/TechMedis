@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Upload, Loader2 } from "lucide-react";
-import { createProduct, updateProduct } from "@/lib/actions/products";
+import { X, Upload, Loader2, GripVertical, Plus, Trash2 } from "lucide-react";
+import { createProduct, updateProduct, getCarouselImages, deleteCarouselImage } from "@/lib/actions/products";
 import {
   CATEGORIES,
   CATEGORY_LABELS,
@@ -19,6 +19,14 @@ interface ProductFormProps {
   product?: Product | null;
   onClose: () => void;
   onSuccess?: () => void;
+}
+
+interface CarouselImage {
+  id: string;
+  url: string;
+  index: number;
+  isNew: boolean;
+  file?: File;
 }
 
 function generateSlug(text: string): string {
@@ -38,16 +46,45 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     product?.image || null
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const carouselInputRef = useRef<HTMLInputElement>(null);
+
+  // Carousel state
+  const [carouselImages, setCarouselImages] = useState<CarouselImage[]>([]);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  // Validate that category is one of the valid categories
+  const getValidCategory = (cat?: string): Category => {
+    if (cat && CATEGORIES.includes(cat as Category)) {
+      return cat as Category;
+    }
+    return "radiologia"; // Default fallback for new products or legacy categories
+  };
 
   const [formData, setFormData] = useState({
     name: product?.name || "",
     slug: product?.slug || "",
     description: product?.description || "",
     status: product?.status || "active",
-    category: (product?.category as Category) || "clinico",
+    category: getValidCategory(product?.category),
     subcategory: product?.subcategory || "",
     subcategory2: product?.subcategory2 || "",
   });
+
+  // Load existing carousel images when editing
+  useEffect(() => {
+    if (product?.slug) {
+      getCarouselImages(product.slug).then((images) => {
+        setCarouselImages(
+          images.map((url, idx) => ({
+            id: `existing-${idx}`,
+            url,
+            index: idx + 1,
+            isNew: false,
+          }))
+        );
+      });
+    }
+  }, [product?.slug]);
 
   const handleNameChange = (name: string) => {
     setFormData((prev) => ({
@@ -75,16 +112,108 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
     }
   };
 
+  // Carousel handlers
+  const handleCarouselAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const newImages: CarouselImage[] = [];
+      const currentMaxIndex = carouselImages.length > 0
+        ? Math.max(...carouselImages.map(img => img.index))
+        : 0;
+
+      Array.from(files).forEach((file, idx) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const newImage: CarouselImage = {
+            id: `new-${Date.now()}-${idx}`,
+            url: reader.result as string,
+            index: currentMaxIndex + idx + 1,
+            isNew: true,
+            file,
+          };
+          setCarouselImages((prev) => [...prev, newImage]);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+    // Reset input
+    if (carouselInputRef.current) {
+      carouselInputRef.current.value = "";
+    }
+  };
+
+  const handleCarouselRemove = async (image: CarouselImage) => {
+    if (!image.isNew && product?.slug) {
+      // Delete from server
+      const result = await deleteCarouselImage(product.slug, image.index);
+      if (!result.success) {
+        toast({
+          title: "Error",
+          description: result.error || "No se pudo eliminar la imagen",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    setCarouselImages((prev) => prev.filter((img) => img.id !== image.id));
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+
+    const newImages = [...carouselImages];
+    const draggedImage = newImages[draggedIndex];
+    newImages.splice(draggedIndex, 1);
+    newImages.splice(index, 0, draggedImage);
+
+    // Update indices
+    newImages.forEach((img, idx) => {
+      img.index = idx + 1;
+    });
+
+    setCarouselImages(newImages);
+    setDraggedIndex(index);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const form = new FormData(e.currentTarget);
-      
+
       // Mantener imagen actual si no se cambió
       if (product?.image && imagePreview === product.image) {
         form.set("keepCurrentImage", "true");
+      }
+
+      // Add new carousel images
+      const newCarouselImages = carouselImages.filter((img) => img.isNew && img.file);
+      newCarouselImages.forEach((img) => {
+        if (img.file) {
+          form.append("carouselImages", img.file);
+        }
+      });
+
+      // Add carousel order (indices of existing images in new order)
+      const existingImages = carouselImages.filter((img) => !img.isNew);
+      if (existingImages.length > 0) {
+        const orderArray = existingImages.map((img) => {
+          // Extract original index from the URL
+          const match = img.url.match(/-(\d+)\.webp$/);
+          return match ? parseInt(match[1], 10) : img.index;
+        });
+        form.set("carouselOrder", JSON.stringify(orderArray));
       }
 
       const result = product
@@ -170,32 +299,32 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             </div>
           </div>
 
-           {/* Descripción */}
-           <div>
-             <label className="block text-sm font-medium text-gray-700 mb-1">
-               Descripción *
-             </label>
-             <textarea
-               name="description"
-               value={formData.description}
-               onChange={(e) =>
-                 setFormData((prev) => ({ ...prev, description: e.target.value }))
-               }
-               required
-               rows={6}
-               className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all resize-none font-mono text-sm"
-               placeholder="Descripción detallada del producto...&#10;&#10;Puedes usar:&#10;- Puntos con guion y espacio (- Texto)&#10;- Números (1. Texto, 2. Texto)&#10;- Párrafos normales"
-             />
-             <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-               <p className="text-xs font-semibold text-blue-900 mb-2">Cómo formatear:</p>
-               <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
-                 <li><code className="bg-blue-100 px-1 rounded">- Texto</code> para viñetas</li>
-                 <li><code className="bg-blue-100 px-1 rounded">1. Texto</code> para listas numeradas</li>
-                 <li>Saltos de línea se respetan</li>
-                 <li>Espacios en blanco separan párrafos</li>
-               </ul>
-             </div>
-           </div>
+          {/* Descripción */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción *
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, description: e.target.value }))
+              }
+              required
+              rows={6}
+              className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all resize-none font-mono text-sm"
+              placeholder="Descripción detallada del producto...&#10;&#10;Puedes usar:&#10;- Puntos con guion y espacio (- Texto)&#10;- Números (1. Texto, 2. Texto)&#10;- Párrafos normales"
+            />
+            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-xs font-semibold text-blue-900 mb-2">Cómo formatear:</p>
+              <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                <li><code className="bg-blue-100 px-1 rounded">- Texto</code> para viñetas</li>
+                <li><code className="bg-blue-100 px-1 rounded">1. Texto</code> para listas numeradas</li>
+                <li>Saltos de línea se respetan</li>
+                <li>Espacios en blanco separan párrafos</li>
+              </ul>
+            </div>
+          </div>
 
           {/* Categoría, Subcategoría y Subcategoría 2 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -208,8 +337,8 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                 value={formData.category}
                 onChange={(e) => {
                   const newCategory = e.target.value as Category;
-                  setFormData((prev) => ({ 
-                    ...prev, 
+                  setFormData((prev) => ({
+                    ...prev,
                     category: newCategory,
                     subcategory: "", // Reset subcategory when changing category
                     subcategory2: "" // Reset subcategory2 when changing category
@@ -233,8 +362,8 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                 name="subcategory"
                 value={formData.subcategory}
                 onChange={(e) =>
-                  setFormData((prev) => ({ 
-                    ...prev, 
+                  setFormData((prev) => ({
+                    ...prev,
                     subcategory: e.target.value,
                     subcategory2: "" // Reset subcategory2 when changing subcategory
                   }))
@@ -297,10 +426,10 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
             </select>
           </div>
 
-          {/* Imagen */}
+          {/* Imagen Principal */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Imagen del producto
+              Imagen principal del producto
             </label>
             {imagePreview ? (
               <div className="relative w-40 h-40">
@@ -333,6 +462,78 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
               name="image"
               accept="image/*"
               onChange={handleImageChange}
+              className="hidden"
+            />
+          </div>
+
+          {/* Imágenes del Carousel */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Imágenes del Carousel (Galería)
+            </label>
+            <p className="text-xs text-gray-500 mb-3">
+              Arrastra las imágenes para cambiar su orden. La imagen principal siempre aparece primero.
+            </p>
+
+            {carouselImages.length > 0 && (
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+                {carouselImages.map((image, index) => (
+                  <div
+                    key={image.id}
+                    draggable
+                    onDragStart={() => handleDragStart(index)}
+                    onDragOver={(e) => handleDragOver(e, index)}
+                    onDragEnd={handleDragEnd}
+                    className={`relative group cursor-move ${draggedIndex === index ? "opacity-50" : ""
+                      }`}
+                  >
+                    <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200 hover:border-techmedis-primary transition-colors">
+                      <img
+                        src={image.url}
+                        alt={`Carousel ${image.index}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Order badge */}
+                    <div className="absolute top-1 left-1 bg-techmedis-primary text-white text-xs font-bold px-2 py-1 rounded-full">
+                      {index + 1}
+                    </div>
+                    {/* Drag handle */}
+                    <div className="absolute top-1 right-1 bg-white/80 rounded p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <GripVertical className="w-4 h-4 text-gray-600" />
+                    </div>
+                    {/* Delete button */}
+                    <button
+                      type="button"
+                      onClick={() => handleCarouselRemove(image)}
+                      className="absolute -bottom-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </button>
+                    {image.isNew && (
+                      <div className="absolute bottom-1 left-1 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">
+                        Nueva
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => carouselInputRef.current?.click()}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-techmedis-primary hover:text-techmedis-primary transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              Agregar imágenes al carousel
+            </button>
+            <input
+              ref={carouselInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleCarouselAdd}
               className="hidden"
             />
           </div>

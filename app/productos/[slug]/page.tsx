@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProductBySlug, getProducts, getRelatedProducts } from "@/lib/actions/products";
+import { getProductBySlug, getProducts, getRelatedProducts, getCarouselImages } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductDetailClient } from "./client";
 import type { Product } from "@/lib/validations/product";
@@ -42,9 +42,10 @@ export async function generateStaticParams() {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const [product, whatsappNumber] = await Promise.all([
+  const [product, whatsappNumber, carouselImages] = await Promise.all([
     getProductBySlug(slug),
     getWhatsAppNumber(),
+    getCarouselImages(slug),
   ]);
 
   if (!product) {
@@ -59,10 +60,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
   );
 
   return (
-    <ProductDetailClient 
-      product={product} 
-      relatedProducts={relatedProducts} 
+    <ProductDetailClient
+      product={product}
+      relatedProducts={relatedProducts}
       whatsappNumber={whatsappNumber}
+      carouselImages={carouselImages}
     />
   );
 }
+

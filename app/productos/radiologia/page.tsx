@@ -63,8 +63,12 @@ export default async function RadiologiaPage({ searchParams }: PageProps) {
                                 con la más alta calidad y precisión.
                             </p>
                         </div>
-                        <div className="rounded-2xl overflow-hidden shadow-2xl bg-techmedis-secondary/50 h-80 flex items-center justify-center">
-                            <span className="text-white/50 text-lg">Imagen próximamente</span>
+                        <div className="rounded-2xl overflow-hidden shadow-2xl h-80">
+                            <img
+                                src="/images/radiologiacard.webp"
+                                alt="Radiología - Equipos de diagnóstico por imágenes"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                     </div>
                 </div>
