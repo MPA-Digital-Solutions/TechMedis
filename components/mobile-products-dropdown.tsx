@@ -85,14 +85,6 @@ export function MobileProductsDropdown({ onClose }: MobileProductsDropdownProps)
                                                             className="overflow-hidden"
                                                         >
                                                             <div className="pl-4 space-y-1">
-                                                                {/* Link a ver todos en esta categoría */}
-                                                                <Link
-                                                                    href={getCategoryPath(category)}
-                                                                    onClick={onClose}
-                                                                    className="block py-2 px-2 text-sm text-white/60 hover:bg-white/10 hover:text-white rounded-md transition-colors duration-200"
-                                                                >
-                                                                    Ver todos
-                                                                </Link>
 
                                                                 {subcategories.map((sub) => (
                                                                     <div key={sub.slug}>
@@ -124,13 +116,6 @@ export function MobileProductsDropdown({ onClose }: MobileProductsDropdownProps)
                                                                                             className="overflow-hidden"
                                                                                         >
                                                                                             <div className="pl-4 space-y-1">
-                                                                                                <Link
-                                                                                                    href={getCategoryPath(category, sub.slug)}
-                                                                                                    onClick={onClose}
-                                                                                                    className="block py-2 px-2 text-xs text-white/50 hover:bg-white/10 hover:text-white rounded-md transition-colors duration-200"
-                                                                                                >
-                                                                                                    Ver todos
-                                                                                                </Link>
                                                                                                 {sub.items.map((item) => (
                                                                                                     <Link
                                                                                                         key={item.slug}
