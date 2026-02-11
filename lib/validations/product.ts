@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES, type Category } from "@/lib/categories";
+import { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES, MAIN_CATEGORIES, CATEGORIES_BY_MAIN, MAIN_CATEGORY_LABELS, MAIN_CATEGORY_PATHS, getMainCategoryFor, type Category, type MainCategory } from "@/lib/categories";
 
-export { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES, type Category } from "@/lib/categories";
+export { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES, MAIN_CATEGORIES, CATEGORIES_BY_MAIN, MAIN_CATEGORY_LABELS, MAIN_CATEGORY_PATHS, getMainCategoryFor, type Category, type MainCategory } from "@/lib/categories";
 
 export const STATUS_OPTIONS = ["active", "inactive"] as const;
 export type ProductStatus = (typeof STATUS_OPTIONS)[number];
@@ -59,4 +59,4 @@ export function generateSlug(name: string): string {
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
-  }
+}

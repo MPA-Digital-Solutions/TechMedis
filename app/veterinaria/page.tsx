@@ -1,20 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CategoryCardsGrid, productCards } from "@/components/category-cards";
+import { CategoryCardsGrid, veterinariaCards } from "@/components/category-cards";
 
-export default function ProductosPage() {
+export default function VeterinariaPage() {
     return (
         <>
             {/* Header */}
-            <section className="bg-gradient-to-br from-techmedis-primary to-techmedis-secondary py-16 md:py-24">
+            <section className="bg-gradient-to-br from-green-600 to-green-800 py-16 md:py-24">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <h1 className="text-4xl md:text-5xl font-display text-white mb-6">
-                        Nuestros Productos
+                        Equipamiento Veterinario
                     </h1>
                     <p className="text-xl text-white/90 font-light leading-relaxed max-w-3xl mx-auto">
-                        Descubra nuestra amplia gama de equipamiento médico de las mejores marcas internacionales,
-                        diseñado para optimizar el diagnóstico y la atención al paciente.
+                        Descubra nuestra línea completa de equipamiento veterinario de las mejores marcas internacionales,
+                        diseñado para optimizar el diagnóstico y la atención animal.
                     </p>
                 </div>
             </section>
@@ -32,10 +32,10 @@ export default function ProductosPage() {
                             Explore Nuestro Catálogo
                         </h2>
                         <p className="text-techmedis-text/60">
-                            Equipos médicos de última generación para diagnóstico por imágenes
+                            Soluciones especializadas para clínicas y hospitales veterinarios
                         </p>
                     </motion.div>
-                    <CategoryCardsGrid cards={productCards} />
+                    <CategoryCardsGrid cards={veterinariaCards} />
                 </div>
             </section>
         </>

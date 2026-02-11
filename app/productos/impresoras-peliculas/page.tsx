@@ -3,7 +3,7 @@ import { getProducts } from "@/lib/actions/products";
 import { getWhatsAppNumber } from "@/lib/actions/config";
 import { ProductsGrid } from "@/components/products-grid";
 import { SubcategoryFilterClient } from "@/components/subcategory-filter-client";
-import { SUBCATEGORIES } from "@/lib/validations/product";
+import { SUBCATEGORIES } from "@/lib/categories";
 
 // DINÁMICO: No cachear, siempre obtener datos frescos de la BD
 export const dynamic = "force-dynamic";

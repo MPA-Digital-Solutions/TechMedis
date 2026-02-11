@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SUBCATEGORIES } from "@/lib/validations/product";
-import type { Category } from "@/lib/validations/product";
+import { SUBCATEGORIES, getMainCategoryFor, MAIN_CATEGORY_PATHS } from "@/lib/categories";
+import type { Category } from "@/lib/categories";
 
 interface SubcategoryFilterClientProps {
   category: Category;
@@ -13,6 +13,8 @@ interface SubcategoryFilterClientProps {
 export function SubcategoryFilterClient({ category, currentSubcategory, currentSubcategory2 }: SubcategoryFilterClientProps) {
   const router = useRouter();
   const subcategories = SUBCATEGORIES[category];
+  const mainCategory = getMainCategoryFor(category);
+  const basePath = MAIN_CATEGORY_PATHS[mainCategory];
 
   // Obtener la subcategoría actual con sus items
   const selectedSubcategoryObj = currentSubcategory
@@ -22,7 +24,7 @@ export function SubcategoryFilterClient({ category, currentSubcategory, currentS
   const hasNestedItems = selectedSubcategoryObj?.items && selectedSubcategoryObj.items.length > 0;
 
   const handleFilterChange = (slug: string | null, slug2?: string | null) => {
-    const categoryPath = `/productos/${category}`;
+    const categoryPath = `${basePath}/${category}`;
 
     if (slug) {
       let path = `${categoryPath}?subcategory=${slug}`;

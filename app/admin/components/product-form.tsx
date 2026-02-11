@@ -10,6 +10,9 @@ import {
   STATUS_OPTIONS,
   STATUS_LABELS,
   SUBCATEGORIES,
+  MAIN_CATEGORIES,
+  MAIN_CATEGORY_LABELS,
+  CATEGORIES_BY_MAIN,
   type Product,
   type Category,
 } from "@/lib/validations/product";
@@ -347,10 +350,14 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-techmedis-primary focus:border-transparent transition-all bg-white cursor-pointer"
               >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {CATEGORY_LABELS[cat]}
-                  </option>
+                {MAIN_CATEGORIES.map((mainCat) => (
+                  <optgroup key={mainCat} label={MAIN_CATEGORY_LABELS[mainCat]}>
+                    {CATEGORIES_BY_MAIN[mainCat].map((cat) => (
+                      <option key={cat} value={cat}>
+                        {CATEGORY_LABELS[cat]}
+                      </option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </div>

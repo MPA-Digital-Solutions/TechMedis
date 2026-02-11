@@ -6,9 +6,9 @@ import { FormattedDescription } from "@/components/formatted-description";
 import Link from "next/link";
 import { ArrowLeft, Tag, CheckCircle, XCircle, Phone, MessageCircle } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
-import { SUBCATEGORIES, CATEGORY_LABELS } from "@/lib/validations/product";
+import { SUBCATEGORIES, CATEGORY_LABELS, getMainCategoryFor, MAIN_CATEGORY_LABELS, MAIN_CATEGORY_PATHS } from "@/lib/validations/product";
 import type { Product } from "@/lib/validations/product";
-import type { Category } from "@/lib/validations/product";
+import type { Category, MainCategory } from "@/lib/validations/product";
 
 // Tipo ligero para productos relacionados (solo campos necesarios para mostrar cards)
 interface RelatedProduct {
@@ -30,12 +30,16 @@ interface ProductDetailClientProps {
 
 export function ProductDetailClient({ product, relatedProducts, whatsappNumber = "5491112345678", carouselImages = [] }: ProductDetailClientProps) {
   const isActive = product.status === "active";
-  const categoryLabel = CATEGORY_LABELS[product.category as Category];
-  const categoryColor = product.category === "clinico" ? "blue" : "green";
+  const categoryTyped = product.category as Category;
+  const categoryLabel = CATEGORY_LABELS[categoryTyped];
+  const mainCategory = getMainCategoryFor(categoryTyped);
+  const mainCategoryLabel = MAIN_CATEGORY_LABELS[mainCategory];
+  const basePath = MAIN_CATEGORY_PATHS[mainCategory];
+  const categoryColor = mainCategory === "productos" ? "blue" : "green";
 
   // Obtener información de subcategoría si existe
   const subcategoryInfo = product.subcategory
-    ? SUBCATEGORIES[product.category as Category]?.find((sub) => sub.slug === product.subcategory)
+    ? SUBCATEGORIES[categoryTyped]?.find((sub) => sub.slug === product.subcategory)
     : null;
 
   const whatsappMessage = encodeURIComponent(
@@ -54,16 +58,23 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
             </Link>
             <span className="text-gray-400">/</span>
             <Link
-              href={product.category === "clinico" ? "/equipamientos-medicos" : "/equipamiento-veterinario"}
+              href={basePath}
               className="text-techmedis-text hover:text-techmedis-primary transition-colors"
             >
-              {product.category === "clinico" ? "Equipamientos Clínicos" : "Equipamiento Veterinario"}
+              {mainCategoryLabel}
+            </Link>
+            <span className="text-gray-400">/</span>
+            <Link
+              href={`${basePath}/${categoryTyped}`}
+              className="text-techmedis-text hover:text-techmedis-primary transition-colors"
+            >
+              {categoryLabel}
             </Link>
             {subcategoryInfo && (
               <>
                 <span className="text-gray-400">/</span>
                 <Link
-                  href={`/${product.category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`}
+                  href={`${basePath}/${categoryTyped}?subcategory=${product.subcategory}`}
                   className="text-techmedis-text hover:text-techmedis-primary transition-colors"
                 >
                   {subcategoryInfo.name}
@@ -81,8 +92,8 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link
             href={product.subcategory
-              ? `/${product.category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}?subcategory=${product.subcategory}`
-              : `/${product.category === "clinico" ? "equipamientos-medicos" : "equipamiento-veterinario"}`
+              ? `${basePath}/${categoryTyped}?subcategory=${product.subcategory}`
+              : `${basePath}/${categoryTyped}`
             }
             className="inline-flex items-center text-techmedis-primary hover:text-techmedis-secondary mb-8 transition-colors"
           >

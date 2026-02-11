@@ -9,11 +9,13 @@ type ImageProps = ComponentProps<typeof Image>;
  */
 export function OptimizedImage(props: ImageProps) {
   // Si la imagen está en /uploads, servir directamente sin optimización
+  // ya que ya han sido procesadas por el servidor (sharp) y para permitir
+  // query strings de cache busting (?t=...)
   if (typeof props.src === "string" && props.src.startsWith("/uploads")) {
     return (
       <Image
         {...props}
-        unoptimized={process.env.NODE_ENV === "production"}
+        unoptimized={true}
       />
     );
   }

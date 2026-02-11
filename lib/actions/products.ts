@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import {
   createProductSchema,
   updateProductSchema,
+  getMainCategoryFor,
   type CreateProductInput,
   type UpdateProductInput,
   type Category,
@@ -14,6 +15,30 @@ import { writeFile, mkdir, unlink, readdir, rename } from "fs/promises";
 import { join } from "path";
 import { existsSync } from "fs";
 import sharp from "sharp";
+
+/**
+ * Revalida todas las rutas que pueden mostrar información de este producto
+ */
+function revalidateProductPaths(slug: string, category: string) {
+  revalidatePath("/admin");
+  revalidatePath("/productos");
+  revalidatePath("/veterinaria");
+
+  // Revalidar la categoría específica
+  const mainCategory = getMainCategoryFor(category as Category);
+  if (mainCategory === "productos") {
+    revalidatePath(`/productos/${category}`);
+  } else {
+    revalidatePath(`/veterinaria/${category}`);
+  }
+
+  // Revalidar el detalle del producto
+  revalidatePath(`/productos/${slug}`);
+
+  // Rutas legacy (opcional, si aún existen)
+  revalidatePath("/equipamientos-medicos");
+  revalidatePath("/equipamiento-veterinario");
+}
 
 interface PrismaProductRaw {
   id: string;
@@ -94,9 +119,7 @@ export async function createProduct(
     });
 
     // Revalidar páginas que muestran productos
-    revalidatePath("/admin");
-    revalidatePath("/equipamientos-medicos");
-    revalidatePath("/equipamiento-veterinario");
+    revalidateProductPaths(product.slug, product.category);
 
     return { success: true, data: { id: product.id } };
   } catch (error) {
@@ -137,7 +160,7 @@ export async function updateProduct(
       slug: newSlug,
       description: formData.get("description") as string,
       status: formData.get("status") as "active" | "inactive",
-      category: formData.get("category") as "clinico" | "veterinario",
+      category: formData.get("category") as Category,
       subcategory: subcategorySlug && subcategorySlug.trim() !== "" ? subcategorySlug : null,
       subcategory2: subcategory2Slug && subcategory2Slug.trim() !== "" ? subcategory2Slug : null,
     };
@@ -177,7 +200,7 @@ export async function updateProduct(
       const newImagePath = join(PRODUCTS_UPLOAD_DIR, `${newSlug}.webp`);
       if (existsSync(oldImagePath)) {
         await rename(oldImagePath, newImagePath);
-        rawData.image = `/uploads/products/${newSlug}.webp`;
+        rawData.image = `/uploads/products/${newSlug}.webp?t=${Date.now()}`;
       }
     }
 
@@ -224,10 +247,7 @@ export async function updateProduct(
     });
 
     // Revalidar páginas que muestran productos
-    revalidatePath("/admin");
-    revalidatePath("/equipamientos-medicos");
-    revalidatePath("/equipamiento-veterinario");
-    revalidatePath(`/productos/${validated.slug}`);
+    revalidateProductPaths(validated.slug, validated.category);
     if (slugChanged) {
       revalidatePath(`/productos/${oldSlug}`);
     }
@@ -266,6 +286,8 @@ export async function deleteProduct(id: string): Promise<ActionResponse> {
 
     // Revalidar páginas que muestran productos
     revalidatePath("/admin");
+    revalidatePath("/productos");
+    revalidatePath("/veterinaria");
     revalidatePath("/equipamientos-medicos");
     revalidatePath("/equipamiento-veterinario");
 
@@ -415,7 +437,7 @@ async function saveProductImage(file: File, slug: string): Promise<string> {
 
   await writeFile(filepath, webpBuffer);
 
-  return `/uploads/products/${filename}`;
+  return `/uploads/products/${filename}?t=${Date.now()}`;
 }
 
 // Save carousel images as {slug}-1.webp, {slug}-2.webp, etc.
@@ -499,6 +521,9 @@ export async function reorderCarouselImages(
       }
     }
 
+    // Revalidar para que se vean los cambios en el frontend
+    revalidatePath(`/productos/${slug}`);
+
     return { success: true };
   } catch (error) {
     console.error("Error reordering carousel images:", error);
@@ -530,6 +555,9 @@ export async function deleteCarouselImage(
       // Reorder to fill the gap
       await reorderCarouselImages(slug, currentIndices);
     }
+
+    // Revalidar
+    revalidatePath(`/productos/${slug}`);
 
     return { success: true };
   } catch (error) {
@@ -595,9 +623,7 @@ export async function toggleProductStatus(
     });
 
     // Revalidar páginas que muestran productos
-    revalidatePath("/admin");
-    revalidatePath("/equipamientos-medicos");
-    revalidatePath("/equipamiento-veterinario");
+    revalidateProductPaths(product.slug, product.category);
 
     return { success: true };
   } catch (error) {

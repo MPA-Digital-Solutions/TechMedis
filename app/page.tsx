@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { CTAButton } from "@/components/cta-button";
 import { HowWeWork } from "@/components/how-we-work";
+import { CategoryCardsGrid, productCards, veterinariaCards } from "@/components/category-cards";
 
 const services = [
   { title: "Asesoría Técnica", icon: <ClipboardList className="w-7 h-7" />, desc: "Expertos a su disposición para guiarlo en cada decisión." },
@@ -220,66 +221,54 @@ export default function HomePage() {
               initial={reduceMotion ? {} : { opacity: 0, x: 30 }}
               animate={reduceMotion ? {} : { opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="hidden lg:grid grid-cols-2 gap-4"
+              className="hidden lg:flex flex-col gap-6"
             >
-              {/* Feature Card 1 - Radiología */}
+              {/* Feature Card 1 - Productos (Clínico) */}
               <button
                 onClick={() => {
-                  const card = document.getElementById('card-radiologia');
-                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  const section = document.getElementById('section-productos');
+                  if (section) section.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
+                className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 hover:bg-white/15 transition-all duration-300 text-left cursor-pointer hover:scale-[1.02] hover:shadow-2xl"
               >
-                <div className="p-3 bg-blue-500/20 rounded-xl w-fit mb-3">
-                  <Stethoscope className="w-6 h-6 text-blue-300" />
+                <div className="flex items-start gap-5">
+                  <div className="p-4 bg-blue-500/20 rounded-2xl">
+                    <Shield className="w-8 h-8 text-blue-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-white text-xl font-bold mb-2">Equipamiento Clínico</h3>
+                    <p className="text-white/70 leading-relaxed">
+                      Soluciones de alta gama para centros médicos y hospitales.
+                    </p>
+                    <div className="mt-4 flex items-center gap-2 text-blue-300 font-semibold text-sm">
+                      Ver Catálogo Productos <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-white font-bold mb-1">Radiología</h3>
-                <p className="text-white/70 text-sm">Equipos de diagnóstico por imágenes de última generación.</p>
               </button>
 
-              {/* Feature Card 2 - Mamografía */}
+              {/* Feature Card 2 - Veterinaria */}
               <button
                 onClick={() => {
-                  const card = document.getElementById('card-mamografia');
-                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  const section = document.getElementById('section-veterinaria');
+                  if (section) section.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
+                className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 hover:bg-white/15 transition-all duration-300 text-left cursor-pointer hover:scale-[1.02] hover:shadow-2xl"
               >
-                <div className="p-3 bg-pink-500/20 rounded-xl w-fit mb-3">
-                  <Heart className="w-6 h-6 text-pink-300" />
+                <div className="flex items-start gap-5">
+                  <div className="p-4 bg-green-500/20 rounded-2xl">
+                    <Stethoscope className="w-8 h-8 text-green-300" />
+                  </div>
+                  <div>
+                    <h3 className="text-white text-xl font-bold mb-2">Equipamiento Veterinario</h3>
+                    <p className="text-white/70 leading-relaxed">
+                      Tecnología especializada para el cuidado de la salud animal.
+                    </p>
+                    <div className="mt-4 flex items-center gap-2 text-green-300 font-semibold text-sm">
+                      Ver Catálogo Veterinaria <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-white font-bold mb-1">Mamografía</h3>
-                <p className="text-white/70 text-sm">Sistemas avanzados para detección temprana.</p>
-              </button>
-
-              {/* Feature Card 3 - Impresoras */}
-              <button
-                onClick={() => {
-                  const card = document.getElementById('card-impresoras');
-                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
-              >
-                <div className="p-3 bg-amber-500/20 rounded-xl w-fit mb-3">
-                  <Award className="w-6 h-6 text-amber-300" />
-                </div>
-                <h3 className="text-white font-bold mb-1">Impresoras</h3>
-                <p className="text-white/70 text-sm">Impresoras de películas médicas de alta resolución.</p>
-              </button>
-
-              {/* Feature Card 4 - PAC RIS */}
-              <button
-                onClick={() => {
-                  const card = document.getElementById('card-pacris');
-                  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }}
-                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 hover:bg-white/15 transition-colors duration-300 text-left cursor-pointer"
-              >
-                <div className="p-3 bg-emerald-500/20 rounded-xl w-fit mb-3">
-                  <Stethoscope className="w-6 h-6 text-emerald-300" />
-                </div>
-                <h3 className="text-white font-bold mb-1">Sistemas PAC RIS</h3>
-                <p className="text-white/70 text-sm">Gestión integral de imágenes médicas.</p>
               </button>
             </motion.div>
           </div>
@@ -343,172 +332,41 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Cards - Grid 2x2 en desktop, apiladas en mobile */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* Card Radiología */}
-            <motion.div
-              initial={animFadeInUp.hidden}
-              whileInView={animFadeInUp.visible}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
-              id="card-radiologia"
-            >
-              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
-                <img
-                  src="/images/radiologiacard.webp"
-                  alt="Radiología"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-700/90 via-blue-600/40 to-transparent" />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                    <Stethoscope className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white/80 text-sm font-medium">Diagnóstico por Imágenes</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Radiología
-                </h3>
-                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
-                  Equipos de radiología de última generación para diagnóstico por imágenes con la más alta calidad.
-                </p>
-                <Link
-                  href="/productos/radiologia"
-                  className="inline-flex items-center gap-2 bg-white text-blue-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
-                >
-                  Explorar Catálogo
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
+          {/* --- Productos --- */}
+          <motion.div
+            id="section-productos"
+            initial={animFadeIn.hidden}
+            whileInView={animFadeIn.visible}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
+            className="mb-8 scroll-mt-24"
+          >
+            <h3 className="text-2xl md:text-3xl font-display text-techmedis-primary mb-2">
+              Productos
+            </h3>
+            <p className="text-techmedis-text/60 mb-6">
+              Equipos médicos de última generación para diagnóstico por imágenes
+            </p>
+          </motion.div>
+          <CategoryCardsGrid cards={productCards} reduceMotion={reduceMotion} />
 
-            {/* Card Mamografía */}
-            <motion.div
-              initial={animFadeInUp.hidden}
-              whileInView={animFadeInUp.visible}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.1 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
-              id="card-mamografia"
-            >
-              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
-                <img
-                  src="/images/mamografiacard.webp"
-                  alt="Mamografía"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-pink-700/90 via-pink-600/40 to-transparent" />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                    <Heart className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white/80 text-sm font-medium">Detección Temprana</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Mamografía
-                </h3>
-                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
-                  Sistemas de mamografía avanzados para detección temprana y diagnóstico preciso.
-                </p>
-                <Link
-                  href="/productos/mamografia"
-                  className="inline-flex items-center gap-2 bg-white text-pink-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
-                >
-                  Explorar Catálogo
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Card Impresoras de Películas */}
-            <motion.div
-              initial={animFadeInUp.hidden}
-              whileInView={animFadeInUp.visible}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.2 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
-              id="card-impresoras"
-            >
-              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
-                <img
-                  src="/images/impresorapelicacard.webp"
-                  alt="Impresoras de Películas"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-amber-700/90 via-amber-600/40 to-transparent" />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                    <Award className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white/80 text-sm font-medium">Impresión Médica</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Impresoras de Películas
-                </h3>
-                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
-                  Impresoras de películas médicas con tecnología de punta para imágenes de alta resolución.
-                </p>
-                <Link
-                  href="/productos/impresoras-peliculas"
-                  className="inline-flex items-center gap-2 bg-white text-amber-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
-                >
-                  Explorar Catálogo
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Card Sistemas PAC RIS */}
-            <motion.div
-              initial={animFadeInUp.hidden}
-              whileInView={animFadeInUp.visible}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.3 }}
-              className="group relative overflow-hidden rounded-3xl bg-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
-              id="card-pacris"
-            >
-              <div className="aspect-[16/12] sm:aspect-[16/10] overflow-hidden">
-                <img
-                  src="/images/sistemapacriscard.webp"
-                  alt="Sistemas PAC RIS"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-emerald-700/90 via-emerald-600/40 to-transparent" />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                    <Stethoscope className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="text-white/80 text-sm font-medium">Gestión de Imágenes</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">
-                  Sistemas PAC RIS
-                </h3>
-                <p className="text-white/80 mb-5 sm:mb-6 line-clamp-2 text-sm sm:text-base">
-                  Soluciones integrales de PACS y RIS para gestión de imágenes médicas.
-                </p>
-                <Link
-                  href="/productos/sistemas-pac-ris"
-                  className="inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-white/90 transition-all group/btn text-sm sm:text-base"
-                >
-                  Explorar Catálogo
-                  <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </motion.div>
-          </div>
+          {/* --- Veterinaria --- */}
+          <motion.div
+            id="section-veterinaria"
+            initial={animFadeIn.hidden}
+            whileInView={animFadeIn.visible}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
+            className="mt-16 mb-8 scroll-mt-24"
+          >
+            <h3 className="text-2xl md:text-3xl font-display text-techmedis-primary mb-2">
+              Veterinaria
+            </h3>
+            <p className="text-techmedis-text/60 mb-6">
+              Soluciones especializadas para clínicas y hospitales veterinarios
+            </p>
+          </motion.div>
+          <CategoryCardsGrid cards={veterinariaCards} reduceMotion={reduceMotion} />
         </div>
       </section>
 

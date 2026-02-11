@@ -4,20 +4,33 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES, type Category } from "@/lib/categories";
+import {
+    CATEGORIES_BY_MAIN,
+    CATEGORY_LABELS,
+    SUBCATEGORIES,
+    MAIN_CATEGORY_LABELS,
+    MAIN_CATEGORY_PATHS,
+    type MainCategory,
+    type Category,
+} from "@/lib/categories";
 
 interface ProductsDropdownProps {
     pathname?: string;
+    mainCategory: MainCategory;
 }
 
-export function ProductsDropdown({ pathname }: ProductsDropdownProps) {
+export function ProductsDropdown({ pathname, mainCategory }: ProductsDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
     const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const isProductsActive = pathname?.startsWith("/productos");
+    const basePath = MAIN_CATEGORY_PATHS[mainCategory];
+    const categories = CATEGORIES_BY_MAIN[mainCategory];
+    const label = MAIN_CATEGORY_LABELS[mainCategory];
+
+    const isActive = pathname?.startsWith(basePath);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -48,7 +61,7 @@ export function ProductsDropdown({ pathname }: ProductsDropdownProps) {
     };
 
     const getCategoryPath = (category: Category, subcategory?: string, subcategory2?: string) => {
-        let path = `/productos/${category}`;
+        let path = `${basePath}/${category}`;
         if (subcategory) {
             path += `?subcategory=${subcategory}`;
             if (subcategory2) {
@@ -66,33 +79,28 @@ export function ProductsDropdown({ pathname }: ProductsDropdownProps) {
             onMouseLeave={handleMouseLeave}
         >
             {/* Button clickeable con dropdown */}
-            <button
+            <Link
+                href={basePath}
                 onClick={() => {
                     setIsOpen(false);
-                    if (typeof window !== 'undefined') {
-                        const section = document.getElementById('catalogo-section');
-                        if (section) {
-                            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }
                 }}
-                className={`text-sm font-medium transition-colors duration-300 relative py-2 inline-flex items-center gap-1 cursor-pointer ${isProductsActive
+                className={`text-sm font-medium transition-colors duration-300 relative py-2 inline-flex items-center gap-1 cursor-pointer ${isActive
                     ? "text-white"
                     : "text-white/80 hover:text-white"
                     }`}
             >
-                Productos
+                {label}
                 <ChevronDown
                     size={16}
                     className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
                 />
-                {isProductsActive && (
+                {isActive && (
                     <motion.div
                         layoutId="underline"
                         className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
                     />
                 )}
-            </button>
+            </Link>
 
             {/* Dropdown Menu */}
             <AnimatePresence>
@@ -105,8 +113,8 @@ export function ProductsDropdown({ pathname }: ProductsDropdownProps) {
                         className="absolute top-full left-0 mt-1 min-w-max bg-techmedis-secondary rounded-lg shadow-xl overflow-visible z-50"
                     >
                         <div className="py-2">
-                            {/* Categorías principales */}
-                            {CATEGORIES.map((category) => {
+                            {/* Categorías de esta main category */}
+                            {categories.map((category) => {
                                 const subcategories = SUBCATEGORIES[category];
                                 const hasSubcategories = subcategories && subcategories.length > 0;
 

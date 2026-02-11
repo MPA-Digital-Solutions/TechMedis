@@ -4,19 +4,32 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { CATEGORIES, CATEGORY_LABELS, SUBCATEGORIES, type Category } from "@/lib/categories";
+import {
+    CATEGORIES_BY_MAIN,
+    CATEGORY_LABELS,
+    SUBCATEGORIES,
+    MAIN_CATEGORY_LABELS,
+    MAIN_CATEGORY_PATHS,
+    type MainCategory,
+    type Category,
+} from "@/lib/categories";
 
 interface MobileProductsDropdownProps {
     onClose: () => void;
+    mainCategory: MainCategory;
 }
 
-export function MobileProductsDropdown({ onClose }: MobileProductsDropdownProps) {
+export function MobileProductsDropdown({ onClose, mainCategory }: MobileProductsDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
     const [expandedSubcategory, setExpandedSubcategory] = useState<string | null>(null);
 
+    const basePath = MAIN_CATEGORY_PATHS[mainCategory];
+    const categories = CATEGORIES_BY_MAIN[mainCategory];
+    const label = MAIN_CATEGORY_LABELS[mainCategory];
+
     const getCategoryPath = (category: Category, subcategory?: string, subcategory2?: string) => {
-        let path = `/productos/${category}`;
+        let path = `${basePath}/${category}`;
         if (subcategory) {
             path += `?subcategory=${subcategory}`;
             if (subcategory2) {
@@ -28,19 +41,19 @@ export function MobileProductsDropdown({ onClose }: MobileProductsDropdownProps)
 
     return (
         <div className="space-y-1">
-            {/* Header - Productos */}
+            {/* Header */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center justify-between w-full py-3 px-2 text-base font-medium rounded-md text-white/80 hover:bg-white/10 hover:text-white transition-colors duration-300"
             >
-                <span>Productos</span>
+                <span>{label}</span>
                 <ChevronDown
                     size={18}
                     className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                 />
             </button>
 
-            {/* Categorías principales */}
+            {/* Categorías */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -51,7 +64,7 @@ export function MobileProductsDropdown({ onClose }: MobileProductsDropdownProps)
                         className="overflow-hidden"
                     >
                         <div className="pl-4 space-y-1">
-                            {CATEGORIES.map((category) => {
+                            {categories.map((category) => {
                                 const subcategories = SUBCATEGORIES[category];
                                 const hasSubcategories = subcategories && subcategories.length > 0;
 

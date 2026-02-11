@@ -9,12 +9,6 @@ import { CTAButton } from "@/components/cta-button";
 import { ProductsDropdown } from "@/components/products-dropdown";
 import { MobileProductsDropdown } from "@/components/mobile-products-dropdown";
 
-const navLinks = [
-  { path: "/", label: "Inicio" },
-  { path: "/services", label: "Servicio Técnico" },
-  { path: "/sobre-nosotros", label: "Nosotros" },
-];
-
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -78,8 +72,8 @@ export function Navbar() {
             <Link
               href="/"
               className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/"
-                  ? "text-white"
-                  : "text-white/80 hover:text-white"
+                ? "text-white"
+                : "text-white/80 hover:text-white"
                 }`}
             >
               Inicio
@@ -92,14 +86,17 @@ export function Navbar() {
             </Link>
 
             {/* Productos con Dropdown */}
-            <ProductsDropdown pathname={pathname} />
+            <ProductsDropdown pathname={pathname} mainCategory="productos" />
+
+            {/* Veterinaria con Dropdown */}
+            <ProductsDropdown pathname={pathname} mainCategory="veterinaria" />
 
             {/* Servicio Técnico */}
             <Link
               href="/services"
               className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/services"
-                  ? "text-white"
-                  : "text-white/80 hover:text-white"
+                ? "text-white"
+                : "text-white/80 hover:text-white"
                 }`}
             >
               Servicio Técnico
@@ -115,8 +112,8 @@ export function Navbar() {
             <Link
               href="/sobre-nosotros"
               className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/sobre-nosotros"
-                  ? "text-white"
-                  : "text-white/80 hover:text-white"
+                ? "text-white"
+                : "text-white/80 hover:text-white"
                 }`}
             >
               Nosotros
@@ -159,23 +156,26 @@ export function Navbar() {
                 href="/"
                 onClick={handleLinkClick}
                 className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${pathname === "/"
-                    ? "bg-white/20 text-white"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                  ? "bg-white/20 text-white"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
               >
                 Inicio
               </Link>
 
-              {/* Mobile Products Dropdown */}
-              <MobileProductsDropdown onClose={handleLinkClick} />
+              {/* Mobile Productos Dropdown */}
+              <MobileProductsDropdown onClose={handleLinkClick} mainCategory="productos" />
+
+              {/* Mobile Veterinaria Dropdown */}
+              <MobileProductsDropdown onClose={handleLinkClick} mainCategory="veterinaria" />
 
               {/* Servicio Técnico */}
               <Link
                 href="/services"
                 onClick={handleLinkClick}
                 className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${pathname === "/services"
-                    ? "bg-white/20 text-white"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                  ? "bg-white/20 text-white"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
               >
                 Servicio Técnico
@@ -186,8 +186,8 @@ export function Navbar() {
                 href="/sobre-nosotros"
                 onClick={handleLinkClick}
                 className={`block py-3 px-2 text-base font-medium rounded-md transition-colors duration-300 ${pathname === "/sobre-nosotros"
-                    ? "bg-white/20 text-white"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                  ? "bg-white/20 text-white"
+                  : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
               >
                 Nosotros

@@ -7,6 +7,7 @@ import {
   CATEGORY_LABELS,
   STATUS_LABELS,
   SUBCATEGORIES,
+  getMainCategoryFor,
   type Product,
   type Category,
   type ProductStatus,
@@ -26,7 +27,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
   // Función para obtener el nombre de la subcategoría por su slug
   const getSubcategoryName = (slug: string | null | undefined, category: Category): string => {
     if (!slug) return "Sin asignar";
-    
+
     const subcategories = SUBCATEGORIES[category];
     const subcategory = subcategories?.find((sub) => sub.slug === slug);
     return subcategory?.name || "Desconocida";
@@ -83,9 +84,12 @@ export function ProductsTable({ products }: ProductsTableProps) {
   };
 
   const getCategoryColor = (category: string) => {
-    return category === "clinico"
+    const cats = CATEGORY_LABELS as Record<string, string>;
+    if (!(category in cats)) return "bg-gray-100 text-gray-800";
+    const main = getMainCategoryFor(category as Category);
+    return main === "productos"
       ? "bg-blue-100 text-blue-800"
-      : "bg-purple-100 text-purple-800";
+      : "bg-green-100 text-green-800";
   };
 
   if (products.length === 0) {

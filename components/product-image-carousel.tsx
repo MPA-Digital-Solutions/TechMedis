@@ -74,14 +74,14 @@ export function ProductImageCarousel({
                     <>
                         <button
                             onClick={goToPrevious}
-                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-techmedis-primary p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-techmedis-primary p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 cursor-pointer"
                             aria-label="Imagen anterior"
                         >
                             <ChevronLeft className="w-6 h-6" />
                         </button>
                         <button
                             onClick={goToNext}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-techmedis-primary p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-techmedis-primary p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 cursor-pointer"
                             aria-label="Imagen siguiente"
                         >
                             <ChevronRight className="w-6 h-6" />
@@ -105,8 +105,8 @@ export function ProductImageCarousel({
                             key={index}
                             onClick={() => goToSlide(index)}
                             className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden transition-all duration-200 ${index === currentIndex
-                                    ? "ring-2 ring-techmedis-primary ring-offset-2"
-                                    : "opacity-70 hover:opacity-100"
+                                ? "ring-2 ring-techmedis-primary ring-offset-2"
+                                : "opacity-70 hover:opacity-100"
                                 }`}
                         >
                             <OptimizedImage
