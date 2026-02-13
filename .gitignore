@@ -45,3 +45,17 @@ next-env.d.ts
 TODO.md
 
 public/uploads
+
+# SSL certificates (solo en el server)
+nginx/ssl/*
+!nginx/ssl/.gitkeep
+
+# Certbot webroot data
+nginx/certbot/*
+!nginx/certbot/.gitkeep
+
+# Nginx backup files
+nginx/*.bak
+nginx/*-backup*
+
+DEPLOY.md
