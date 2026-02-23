@@ -81,10 +81,6 @@ export function Footer() {
                 <Mail size={18} className="text-white/70 mt-0.5 flex-shrink-0" />
                 <span>info@techmedis.com</span>
               </li>
-              <li className="flex items-start space-x-3 text-white/80 text-sm">
-                <MapPin size={18} className="text-white/70 mt-0.5 flex-shrink-0" />
-                <span>Av. Principal 123, Ciudad</span>
-              </li>
             </ul>
           </div>
         </div>
