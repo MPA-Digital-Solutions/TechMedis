@@ -25,10 +25,11 @@ export function ProductCard({ product, whatsappNumber = "5491112345678" }: Produ
   const isInactive = product.status === "inactive";
   const isAvailable = !isInactive;
 
+  const cleanNumber = whatsappNumber.replace(/\D/g, "");
   const whatsappMessage = encodeURIComponent(
     `Hola! Estoy interesado en el producto: ${product.name}. Me gustaría recibir más información.`
   );
-  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappLink = `https://wa.me/${cleanNumber}?text=${whatsappMessage}`;
 
   return (
     <motion.article

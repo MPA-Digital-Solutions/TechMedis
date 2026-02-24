@@ -42,10 +42,11 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
     ? SUBCATEGORIES[categoryTyped]?.find((sub) => sub.slug === product.subcategory)
     : null;
 
+  const cleanNumber = whatsappNumber.replace(/\D/g, "");
   const whatsappMessage = encodeURIComponent(
     `Hola! Estoy interesado en el producto: ${product.name}. ¿Podrían darme más información?`
   );
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${cleanNumber}?text=${whatsappMessage}`;
 
   return (
     <>

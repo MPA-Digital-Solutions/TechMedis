@@ -69,10 +69,8 @@ export async function setConfig(
       QUERY_TIMEOUT
     );
 
-    // Revalidar páginas que usan configuración
-    revalidatePath("/admin");
-    revalidatePath("/");
-    revalidatePath("/contacto");
+    // Revalidar TODAS las páginas (config puede afectar cualquier ruta)
+    revalidatePath("/", "layout");
     
     return { success: true };
   } catch (error) {

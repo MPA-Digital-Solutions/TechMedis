@@ -68,8 +68,13 @@ export function AdminDashboard({ initialProducts, initialConfig = {}, initialCli
   const handleSaveConfig = async () => {
     setIsSavingConfig(true);
     try {
-      const result = await setConfig("whatsapp_number", whatsappNumber);
+      // Sanitizar: solo dígitos para wa.me
+      const sanitized = whatsappNumber.replace(/\D/g, "");
+      const result = await setConfig("whatsapp_number", sanitized);
       if (result.success) {
+        // Limpiar cache local del botón flotante de WhatsApp
+        try { localStorage.removeItem("techmedis_whatsapp_number"); } catch {}
+        setWhatsappNumber(sanitized);
         toast({
           title: "Configuración guardada",
           description: "El número de WhatsApp se ha actualizado correctamente.",

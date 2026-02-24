@@ -5,9 +5,11 @@ export async function GET(request: NextRequest) {
   try {
     const number = await getWhatsAppNumber();
     
-    console.log("WhatsApp API: Retrieved number:", number);
+    // Sanitizar: solo dígitos para wa.me
+    const sanitized = number ? number.replace(/\D/g, "") : null;
+    console.log("WhatsApp API: Retrieved number:", sanitized);
     
-    if (!number) {
+    if (!sanitized) {
       console.warn("WhatsApp API: No number found, using default");
       return NextResponse.json({
         success: true,
@@ -17,7 +19,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({
       success: true,
-      number: number
+      number: sanitized
     });
   } catch (error) {
     console.error("Error fetching WhatsApp config:", error);

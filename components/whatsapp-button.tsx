@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 
-// Cache key y duración (24 horas en ms)
+// Cache key y duración (5 minutos en ms — se actualiza rápido al cambiar desde el panel)
 const CACHE_KEY = "techmedis_whatsapp_number";
-const CACHE_DURATION = 24 * 60 * 60 * 1000;
+const CACHE_DURATION = 5 * 60 * 1000;
 
 interface CachedNumber {
   number: string;
@@ -75,7 +75,7 @@ export function WhatsAppButton({
       });
   }, [phoneNumber]);
 
-  const finalPhoneNumber = phoneNumber || configuredNumber;
+  const finalPhoneNumber = (phoneNumber || configuredNumber).replace(/\D/g, "");
   const whatsappUrl = `https://wa.me/${finalPhoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
