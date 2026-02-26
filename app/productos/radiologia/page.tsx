@@ -65,7 +65,7 @@ export default async function RadiologiaPage({ searchParams }: PageProps) {
                         </div>
                         <div className="rounded-2xl overflow-hidden shadow-2xl h-80">
                             <img
-                                src="/images/radiologiacard.webp"
+                                src={selectedSubcategory === "digitalizadores-directos" ? "/images/digitalizaciondirecta.webp" : "/images/radiologiacard.webp"}
                                 alt="Radiología - Equipos de diagnóstico por imágenes"
                                 className="w-full h-full object-cover"
                             />

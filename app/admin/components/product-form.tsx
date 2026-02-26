@@ -118,28 +118,36 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
   // Carousel handlers
   const handleCarouselAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (files) {
-      const newImages: CarouselImage[] = [];
-      const currentMaxIndex = carouselImages.length > 0
-        ? Math.max(...carouselImages.map(img => img.index))
-        : 0;
+    if (!files || files.length === 0) return;
 
-      Array.from(files).forEach((file, idx) => {
+    const fileArray = Array.from(files);
+    const currentMaxIndex = carouselImages.length > 0
+      ? Math.max(...carouselImages.map(img => img.index))
+      : 0;
+    const batchId = Date.now();
+
+    // Read all files and batch-add them to state
+    const readPromises = fileArray.map((file, idx) => {
+      return new Promise<CarouselImage>((resolve) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          const newImage: CarouselImage = {
-            id: `new-${Date.now()}-${idx}`,
+          resolve({
+            id: `new-${batchId}-${idx}`,
             url: reader.result as string,
             index: currentMaxIndex + idx + 1,
             isNew: true,
             file,
-          };
-          setCarouselImages((prev) => [...prev, newImage]);
+          });
         };
         reader.readAsDataURL(file);
       });
-    }
-    // Reset input
+    });
+
+    Promise.all(readPromises).then((newImages) => {
+      setCarouselImages((prev) => [...prev, ...newImages]);
+    });
+
+    // Reset input so the same files can be selected again
     if (carouselInputRef.current) {
       carouselInputRef.current.value = "";
     }
@@ -460,14 +468,14 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
               >
                 <Upload className="w-10 h-10 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500">Haz clic para subir una imagen</p>
-                <p className="text-gray-400 text-sm">PNG, JPG hasta 5MB</p>
+                <p className="text-gray-400 text-sm">PNG, JPG, WebP, GIF, AVIF, TIFF, BMP hasta 5MB</p>
               </div>
             )}
             <input
               ref={fileInputRef}
               type="file"
               name="image"
-              accept="image/*"
+              accept=".png,.jpg,.jpeg,.webp,.gif,.avif,.tiff,.tif,.bmp,.svg,image/png,image/jpeg,image/webp,image/gif,image/avif,image/tiff,image/bmp,image/svg+xml"
               onChange={handleImageChange}
               className="hidden"
             />
@@ -539,7 +547,7 @@ export function ProductForm({ product, onClose, onSuccess }: ProductFormProps) {
               ref={carouselInputRef}
               type="file"
               multiple
-              accept="image/*"
+              accept=".png,.jpg,.jpeg,.webp,.gif,.avif,.tiff,.tif,.bmp,.svg,image/png,image/jpeg,image/webp,image/gif,image/avif,image/tiff,image/bmp,image/svg+xml"
               onChange={handleCarouselAdd}
               className="hidden"
             />
