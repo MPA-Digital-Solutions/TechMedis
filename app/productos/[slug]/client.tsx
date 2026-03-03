@@ -35,7 +35,7 @@ export function ProductDetailClient({ product, relatedProducts, whatsappNumber =
   const mainCategory = getMainCategoryFor(categoryTyped);
   const mainCategoryLabel = MAIN_CATEGORY_LABELS[mainCategory];
   const basePath = MAIN_CATEGORY_PATHS[mainCategory];
-  const categoryColor = mainCategory === "productos" ? "blue" : "green";
+  const categoryColor = "blue";
 
   // Obtener información de subcategoría si existe
   const subcategoryInfo = product.subcategory

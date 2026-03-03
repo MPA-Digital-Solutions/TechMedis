@@ -87,6 +87,21 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Redirecciones de rutas antiguas a las nuevas
+  async redirects() {
+    return [
+      {
+        source: "/productos/impresoras-peliculas",
+        destination: "/productos/impresoras-dicom",
+        permanent: true,
+      },
+      {
+        source: "/productos/sistemas-pac-ris",
+        destination: "/productos/sistemas-pacs-ris",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

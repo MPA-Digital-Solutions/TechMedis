@@ -28,8 +28,7 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
   // Contact info with dynamic phone number
   const contactInfo = [
     { icon: <Phone size={24} />, label: formatPhoneForDisplay(whatsappNumber), href: `tel:+${whatsappNumber.replace(/\D/g, '')}` },
-    { icon: <Mail size={24} />, label: "info@techmedis.com", href: "mailto:info@techmedis.com" },
-    { icon: <MapPin size={24} />, label: "Av. Principal 123, Ciudad", href: null },
+    { icon: <Mail size={24} />, label: "info@techmedis.com", href: "mailto:info@techmedis.com" }
   ];
 
   const [formData, setFormData] = useState({

@@ -17,7 +17,7 @@ interface PageProps {
     searchParams: Promise<{ subcategory?: string; subcategory2?: string }>;
 }
 
-export default async function SistemasPacRisPage({ searchParams }: PageProps) {
+export default async function SistemasPacsRisPage({ searchParams }: PageProps) {
     const params = await searchParams;
     const selectedSubcategory = params.subcategory;
     const selectedSubcategory2 = params.subcategory2;

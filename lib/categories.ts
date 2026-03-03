@@ -31,8 +31,11 @@ export const CATEGORIES = [
   // Productos
   "radiologia",
   "mamografia",
-  "impresoras-peliculas",
-  "sistemas-pac-ris",
+  "impresoras-dicom",
+  "sistemas-pacs-ris",
+  "accesorios",
+  "insumos",
+  "otros",
   // Veterinaria
   "digitalizacion-directa-veterinaria",
   "digitalizacion-indirecta-veterinaria",
@@ -44,8 +47,11 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   // Productos
   radiologia: "Radiología",
   mamografia: "Mamografía",
-  "impresoras-peliculas": "Impresoras de Películas",
-  "sistemas-pac-ris": "Sistemas PAC RIS",
+  "impresoras-dicom": "Impresoras DICOM",
+  "sistemas-pacs-ris": "Sistemas PACS / RIS",
+  "accesorios": "Accesorios",
+  "insumos": "Insumos",
+  "otros": "Otros",
   // Veterinaria
   "digitalizacion-directa-veterinaria": "Digitalización Directa Veterinaria",
   "digitalizacion-indirecta-veterinaria": "Digitalización Indirecta Veterinaria",
@@ -55,7 +61,7 @@ export const CATEGORY_LABELS: Record<Category, string> = {
 // ==================== MAPEO: qué categories pertenecen a cada main category ====================
 
 export const CATEGORIES_BY_MAIN: Record<MainCategory, Category[]> = {
-  productos: ["radiologia", "mamografia", "impresoras-peliculas", "sistemas-pac-ris"],
+  productos: ["radiologia", "mamografia", "impresoras-dicom", "sistemas-pacs-ris", "accesorios", "insumos", "otros"],
   veterinaria: ["digitalizacion-directa-veterinaria", "digitalizacion-indirecta-veterinaria", "equipos-rx-portatiles"],
 };
 
@@ -118,10 +124,19 @@ export const SUBCATEGORIES: Record<
       slug: "digitalizadores",
     },
   ],
-  "impresoras-peliculas": [
+  "impresoras-dicom": [
     // Agregar subcategorías aquí
   ],
-  "sistemas-pac-ris": [
+  "sistemas-pacs-ris": [
+    // Agregar subcategorías aquí
+  ],
+  "accesorios": [
+    // Agregar subcategorías aquí
+  ],
+  "insumos": [
+    // Agregar subcategorías aquí
+  ],
+  "otros": [
     // Agregar subcategorías aquí
   ],
   // === Veterinaria (sin subcategorías) ===
@@ -129,3 +144,4 @@ export const SUBCATEGORIES: Record<
   "digitalizacion-indirecta-veterinaria": [],
   "equipos-rx-portatiles": [],
 };
+

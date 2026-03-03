@@ -9,21 +9,21 @@ import { SUBCATEGORIES } from "@/lib/categories";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-    title: "Sistemas PACS / RIS - Techmedis",
-    description: "Sistemas PACS / RIS para gestión de imágenes médicas. Soluciones integrales para radiología digital.",
+    title: "Otros Productos - Techmedis",
+    description: "Otros productos y soluciones complementarias para su institución de salud.",
 };
 
 interface PageProps {
     searchParams: Promise<{ subcategory?: string; subcategory2?: string }>;
 }
 
-export default async function SistemasPacRisPage({ searchParams }: PageProps) {
+export default async function OtrosPage({ searchParams }: PageProps) {
     const params = await searchParams;
     const selectedSubcategory = params.subcategory;
     const selectedSubcategory2 = params.subcategory2;
 
     const [products, whatsappNumber] = await Promise.all([
-        getProducts({ category: "sistemas-pacs-ris", status: "active" }),
+        getProducts({ category: "otros", status: "active" }),
         getWhatsAppNumber(),
     ]);
 
@@ -40,7 +40,7 @@ export default async function SistemasPacRisPage({ searchParams }: PageProps) {
 
     // Obtener el nombre de la subcategoría seleccionada
     const selectedSubcategoryObj = selectedSubcategory
-        ? SUBCATEGORIES["sistemas-pacs-ris"].find((sub) => sub.slug === selectedSubcategory)
+        ? SUBCATEGORIES["otros"].find((sub) => sub.slug === selectedSubcategory)
         : null;
 
     return (
@@ -51,7 +51,7 @@ export default async function SistemasPacRisPage({ searchParams }: PageProps) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                         <div>
                             <h1 className="text-4xl md:text-5xl font-display text-white mb-6">
-                                Sistemas PACS / RIS
+                                Otros Productos
                                 {selectedSubcategoryObj && (
                                     <span className="block text-2xl font-normal text-white/80 mt-2">
                                         {selectedSubcategoryObj.name}
@@ -59,14 +59,13 @@ export default async function SistemasPacRisPage({ searchParams }: PageProps) {
                                 )}
                             </h1>
                             <p className="text-xl text-white/90 font-light leading-relaxed">
-                                Soluciones integrales de PACS / RIS para gestión, almacenamiento
-                                y distribución de imágenes médicas en su institución.
+                                Productos y soluciones complementarias para su institución de salud.
                             </p>
                         </div>
                         <div className="rounded-2xl overflow-hidden shadow-2xl h-80">
                             <img
                                 src="/images/sistemapacriscard.webp"
-                                alt="Sistemas PACS / RIS - Gestión de imágenes médicas"
+                                alt="Otros productos médicos"
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -79,14 +78,14 @@ export default async function SistemasPacRisPage({ searchParams }: PageProps) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Filtro de Subcategorías */}
                     <SubcategoryFilterClient
-                        category="sistemas-pacs-ris"
+                        category="otros"
                         currentSubcategory={selectedSubcategory}
                         currentSubcategory2={selectedSubcategory2}
                     />
 
                     <ProductsGrid
                         products={filteredProducts}
-                        emptyMessage="No hay sistemas PACS / RIS disponibles en esta subcategoría."
+                        emptyMessage="No hay productos disponibles en esta subcategoría."
                         whatsappNumber={whatsappNumber}
                     />
                 </div>

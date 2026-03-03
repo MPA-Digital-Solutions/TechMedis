@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Wrench, Settings, GraduationCap, Headphones, FileText, Shield, ClipboardCheck, Activity } from "lucide-react";
+import { Wrench, Settings, GraduationCap, Headphones, FileText, ClipboardCheck, Activity, ShieldCheck, PackageCheck } from "lucide-react";
 import { ServiceCard } from "@/components/service-card";
 import { CTAButton } from "@/components/cta-button";
 
@@ -42,9 +42,14 @@ const services = [
     icon: <Activity className="w-10 h-10" />,
   },
   {
-    name: "Garantía Extendida",
-    description: "Protección adicional para su inversión a largo plazo.",
-    icon: <Shield className="w-10 h-10" />,
+    name: "Blindajes Radiológicos",
+    description: "Cálculo y realización de blindajes radiológicos para la gestión de su habilitación.",
+    icon: <ShieldCheck className="w-10 h-10" />,
+  },
+  {
+    name: "Alquileres",
+    description: "Alquiler de equipamiento para cirugía o diagnóstico por imágenes como Arcos en C o digitalizadores.",
+    icon: <PackageCheck className="w-10 h-10" />,
   },
 ];
 
@@ -80,7 +85,7 @@ export default function ServiciosClient() {
       {/* Services Grid */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <motion.div
                 key={index}

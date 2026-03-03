@@ -91,7 +91,7 @@ export function Navbar() {
             {/* Veterinaria con Dropdown */}
             <ProductsDropdown pathname={pathname} mainCategory="veterinaria" />
 
-            {/* Servicio Técnico */}
+            {/* Servicios */}
             <Link
               href="/services"
               className={`text-sm font-medium transition-colors duration-300 relative py-2 ${pathname === "/services"
@@ -99,7 +99,7 @@ export function Navbar() {
                 : "text-white/80 hover:text-white"
                 }`}
             >
-              Servicio Técnico
+              Servicios
               {pathname === "/services" && (
                 <motion.div
                   layoutId="underline"
@@ -169,7 +169,7 @@ export function Navbar() {
               {/* Mobile Veterinaria Dropdown */}
               <MobileProductsDropdown onClose={handleLinkClick} mainCategory="veterinaria" />
 
-              {/* Servicio Técnico */}
+              {/* Servicios */}
               <Link
                 href="/services"
                 onClick={handleLinkClick}
@@ -178,7 +178,7 @@ export function Navbar() {
                   : "text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
               >
-                Servicio Técnico
+                Servicios
               </Link>
 
               {/* Nosotros */}

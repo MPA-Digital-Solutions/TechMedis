@@ -6,14 +6,15 @@ import { useRef, useEffect, useState } from "react";
 import {
   ClipboardList,
   Wrench,
-  Shield,
   Headphones,
   ArrowRight,
   Sparkles,
   Stethoscope,
   Heart,
   Award,
-  Phone
+  Phone,
+  ShieldCheck,
+  PackageCheck
 } from "lucide-react";
 import { CTAButton } from "@/components/cta-button";
 import { HowWeWork } from "@/components/how-we-work";
@@ -22,8 +23,9 @@ import { CategoryCardsGrid, productCards, veterinariaCards } from "@/components/
 const services = [
   { title: "Asesoría Técnica", icon: <ClipboardList className="w-7 h-7" />, desc: "Expertos a su disposición para guiarlo en cada decisión." },
   { title: "Instalación Profesional", icon: <Wrench className="w-7 h-7" />, desc: "Montaje certificado con los más altos estándares." },
-  { title: "Garantía Extendida", icon: <Shield className="w-7 h-7" />, desc: "Respaldo total en cada equipo que adquiera." },
-  { title: "Soporte 24/7", icon: <Headphones className="w-7 h-7" />, desc: "Asistencia técnica cuando más lo necesite." },
+
+  { title: "Blindajes Radiológicos", icon: <ShieldCheck className="w-7 h-7" />, desc: "Cálculo y realización de blindajes radiológicos para la gestión de su habilitación." },
+  { title: "Alquileres", icon: <PackageCheck className="w-7 h-7" />, desc: "Alquiler de equipamiento para cirugía o diagnóstico por imágenes como Arcos en C o digitalizadores." },
 ];
 
 const stats = [
@@ -166,11 +168,13 @@ export default function HomePage() {
                 className="text-4xl sm:text-5xl lg:text-6xl font-display text-white mb-6 leading-tight"
               >
                 Equipamiento Médico de{" "}
-                <span className="relative">
-                  <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-200 to-white">
+                <span className="relative inline-block">
+                  <span
+                    className="relative z-10 text-white"
+                    style={{ textShadow: '0 0 20px rgba(147, 197, 253, 0.4), 0 0 40px rgba(147, 197, 253, 0.15)' }}
+                  >
                     marcas líderes
                   </span>
-                  <span className="absolute bottom-2 left-0 h-3 bg-white/20 -z-0 w-full" />
                 </span>
               </motion.h1>
 
@@ -233,7 +237,7 @@ export default function HomePage() {
               >
                 <div className="flex items-start gap-5">
                   <div className="p-4 bg-blue-500/20 rounded-2xl">
-                    <Shield className="w-8 h-8 text-blue-300" />
+                    <ShieldCheck className="w-8 h-8 text-blue-300" />
                   </div>
                   <div>
                     <h3 className="text-white text-xl font-bold mb-2">Equipamiento Clínico</h3>
@@ -256,15 +260,15 @@ export default function HomePage() {
                 className="group bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 hover:bg-white/15 transition-all duration-300 text-left cursor-pointer hover:scale-[1.02] hover:shadow-2xl"
               >
                 <div className="flex items-start gap-5">
-                  <div className="p-4 bg-green-500/20 rounded-2xl">
-                    <Stethoscope className="w-8 h-8 text-green-300" />
+                  <div className="p-4 bg-blue-500/20 rounded-2xl">
+                    <Stethoscope className="w-8 h-8 text-blue-300" />
                   </div>
                   <div>
                     <h3 className="text-white text-xl font-bold mb-2">Equipamiento Veterinario</h3>
                     <p className="text-white/70 leading-relaxed">
                       Tecnología especializada para el cuidado de la salud animal.
                     </p>
-                    <div className="mt-4 flex items-center gap-2 text-green-300 font-semibold text-sm">
+                    <div className="mt-4 flex items-center gap-2 text-blue-300 font-semibold text-sm">
                       Ver Catálogo Veterinaria <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>

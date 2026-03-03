@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Stethoscope, Heart, Award, Monitor, Tablet, Zap } from "lucide-react";
+import { ArrowRight, Stethoscope, Heart, Monitor, Tablet, Zap, Package, Box, MoreHorizontal, Printer, Server } from "lucide-react";
 
 // ==================== PRODUCTOS CARDS CONFIG ====================
 export const productCards = [
@@ -30,25 +30,58 @@ export const productCards = [
     },
     {
         id: "card-impresoras",
-        title: "Impresoras de Películas",
+        title: "Impresoras DICOM",
         subtitle: "Impresión Médica",
-        description: "Impresoras de películas médicas con tecnología de punta para imágenes de alta resolución.",
+        description: "Impresoras DICOM con tecnología de punta para imágenes médicas de alta resolución.",
         image: "/images/impresorapelicacard.webp",
-        href: "/productos/impresoras-peliculas",
+        href: "/productos/impresoras-dicom",
         gradient: "from-amber-700/90 via-amber-600/40 to-transparent",
         buttonColor: "text-amber-600",
-        icon: <Award className="w-5 h-5 text-white" />,
+        icon: <Printer className="w-5 h-5 text-white" />,
     },
     {
         id: "card-pacris",
-        title: "Sistemas PAC RIS",
+        title: "Sistemas PACS / RIS",
         subtitle: "Gestión de Imágenes",
-        description: "Soluciones integrales de PACS y RIS para gestión de imágenes médicas.",
+        description: "Soluciones integrales de PACS / RIS para gestión de imágenes médicas.",
         image: "/images/sistemapacriscard.webp",
-        href: "/productos/sistemas-pac-ris",
+        href: "/productos/sistemas-pacs-ris",
         gradient: "from-emerald-700/90 via-emerald-600/40 to-transparent",
         buttonColor: "text-emerald-600",
-        icon: <Stethoscope className="w-5 h-5 text-white" />,
+        icon: <Server className="w-5 h-5 text-white" />,
+    },
+    {
+        id: "card-accesorios",
+        title: "Accesorios",
+        subtitle: "Complementos Médicos",
+        description: "Accesorios complementarios para equipamiento médico y sistemas de diagnóstico.",
+        image: "/images/radiologiacard.webp",
+        href: "/productos/accesorios",
+        gradient: "from-indigo-700/90 via-indigo-600/40 to-transparent",
+        buttonColor: "text-indigo-600",
+        icon: <Package className="w-5 h-5 text-white" />,
+    },
+    {
+        id: "card-insumos",
+        title: "Insumos",
+        subtitle: "Suministros Médicos",
+        description: "Insumos y suministros para el funcionamiento óptimo de su equipamiento médico.",
+        image: "/images/mamografiacard.webp",
+        href: "/productos/insumos",
+        gradient: "from-violet-700/90 via-violet-600/40 to-transparent",
+        buttonColor: "text-violet-600",
+        icon: <Box className="w-5 h-5 text-white" />,
+    },
+    {
+        id: "card-otros",
+        title: "Otros",
+        subtitle: "Productos Adicionales",
+        description: "Otros productos y soluciones complementarias para su institución de salud.",
+        image: "/images/sistemapacriscard.webp",
+        href: "/productos/otros",
+        gradient: "from-slate-700/90 via-slate-600/40 to-transparent",
+        buttonColor: "text-slate-600",
+        icon: <MoreHorizontal className="w-5 h-5 text-white" />,
     },
 ];
 
@@ -61,8 +94,8 @@ export const veterinariaCards = [
         description: "Sistemas de digitalización directa para diagnóstico veterinario con captura inmediata de imágenes.",
         image: "/images/digitalizaciondirectaveterinaria.webp",
         href: "/veterinaria/digitalizacion-directa-veterinaria",
-        gradient: "from-green-700/90 via-green-600/40 to-transparent",
-        buttonColor: "text-green-600",
+        gradient: "from-blue-700/90 via-blue-600/40 to-transparent",
+        buttonColor: "text-blue-600",
         icon: <Monitor className="w-5 h-5 text-white" />,
     },
     {
@@ -72,8 +105,8 @@ export const veterinariaCards = [
         description: "Equipos de digitalización indirecta con tecnología CR para radiología veterinaria.",
         image: "/images/digitalizacionindirectaveterinaria.webp",
         href: "/veterinaria/digitalizacion-indirecta-veterinaria",
-        gradient: "from-teal-700/90 via-teal-600/40 to-transparent",
-        buttonColor: "text-teal-600",
+        gradient: "from-sky-700/90 via-sky-600/40 to-transparent",
+        buttonColor: "text-sky-600",
         icon: <Tablet className="w-5 h-5 text-white" />,
     },
     {
@@ -83,8 +116,8 @@ export const veterinariaCards = [
         description: "Equipos de rayos X portátiles especializados para uso veterinario en campo y clínica.",
         image: "/images/rayosxportatiles.webp",
         href: "/veterinaria/equipos-rx-portatiles",
-        gradient: "from-emerald-700/90 via-emerald-600/40 to-transparent",
-        buttonColor: "text-emerald-600",
+        gradient: "from-indigo-700/90 via-indigo-600/40 to-transparent",
+        buttonColor: "text-indigo-600",
         icon: <Zap className="w-5 h-5 text-white" />,
     },
 ];
