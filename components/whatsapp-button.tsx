@@ -14,11 +14,13 @@ interface CachedNumber {
 interface WhatsAppButtonProps {
   phoneNumber?: string;
   message?: string;
+  conversionClass?: string;
 }
 
 export function WhatsAppButton({ 
   phoneNumber, 
-  message = "Hola! Estoy interesado en sus equipos médicos. ¿Podrían brindarme más información?" 
+  message = "Hola! Estoy interesado en sus equipos médicos. ¿Podrían brindarme más información?",
+  conversionClass = "conversion-cta"
 }: WhatsAppButtonProps) {
   const [configuredNumber, setConfiguredNumber] = useState<string>("5491112345678");
   const [isVisible, setIsVisible] = useState(false);
@@ -78,12 +80,20 @@ export function WhatsAppButton({
   const finalPhoneNumber = (phoneNumber || configuredNumber).replace(/\D/g, "");
   const whatsappUrl = `https://wa.me/${finalPhoneNumber}?text=${encodeURIComponent(message)}`;
 
+  const handleClick = () => {
+    // Trigger conversion event manually (fallback for external links)
+    if (typeof window !== 'undefined' && typeof (window as any).gtag !== 'undefined') {
+      (window as any).gtag('event', 'conversion', { 'send_to': 'AW-17987586353' });
+    }
+  };
+
   return (
     <a
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`conversion-cta fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-300 group ${
+      onClick={handleClick}
+      className={`${conversionClass} fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-300 group ${
         isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
       }`}
       aria-label="Contactar por WhatsApp"
