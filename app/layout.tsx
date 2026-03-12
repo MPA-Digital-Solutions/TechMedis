@@ -66,7 +66,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               document.addEventListener('click', function(e) {
-                var classes = ['conversion-cta', 'conversion-formulario', 'conversion-radiologia', 'conversion-mamografia', 'conversion-impresoras'];
+                var classes = ['conversion-cta', 'conversion-formulario', 'conversion-radiologia', 'conversion-mamografia', 'conversion-impresoras', 'conversion-botonwp'];
                 for (var i = 0; i < classes.length; i++) {
                   if (e.target.closest('.' + classes[i])) {
                     typeof gtag !== 'undefined' && gtag('event', 'conversion', { 'send_to': 'AW-17987586353' });

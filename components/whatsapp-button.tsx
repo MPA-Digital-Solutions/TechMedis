@@ -20,7 +20,7 @@ interface WhatsAppButtonProps {
 export function WhatsAppButton({ 
   phoneNumber, 
   message = "Hola! Estoy interesado en sus equipos médicos. ¿Podrían brindarme más información?",
-  conversionClass = "conversion-cta"
+  conversionClass = "conversion-botonwp"
 }: WhatsAppButtonProps) {
   const [configuredNumber, setConfiguredNumber] = useState<string>("5491112345678");
   const [isVisible, setIsVisible] = useState(false);
