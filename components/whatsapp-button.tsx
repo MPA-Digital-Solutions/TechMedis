@@ -81,8 +81,12 @@ export function WhatsAppButton({
   const whatsappUrl = `https://wa.me/${finalPhoneNumber}?text=${encodeURIComponent(message)}`;
 
   const handleClick = () => {
-    // Trigger conversion event manually (fallback for external links)
-    if (typeof window !== 'undefined' && typeof (window as any).gtag !== 'undefined') {
+    if (typeof window === 'undefined') return;
+    // Push directo al dataLayer (funciona con GTM y gtag aunque no estén cargados todavía)
+    const dl = ((window as any).dataLayer = (window as any).dataLayer || []);
+    dl.push({ event: 'conversion_cta' });
+    // También llamamos gtag si está disponible
+    if (typeof (window as any).gtag === 'function') {
       (window as any).gtag('event', 'conversion', { 'send_to': 'AW-17987586353' });
     }
   };
@@ -99,7 +103,7 @@ export function WhatsAppButton({
       aria-label="Contactar por WhatsApp"
     >
       {/* Pulse animation ring - CSS optimizado */}
-      <span className="absolute inset-0 rounded-full bg-green-500 animate-pulse-slow opacity-30" />
+      <span className="pointer-events-none absolute inset-0 rounded-full bg-green-500 animate-pulse-slow opacity-30" />
       
       {/* WhatsApp Icon - Official Logo */}
       <svg 
