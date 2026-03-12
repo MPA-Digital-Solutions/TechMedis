@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { LayoutWrapper } from "@/components/layout-wrapper";
 import "@/app/globals.css";
 
@@ -29,6 +30,24 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
+        {/* Google Ads Pixel */}
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17987586353"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-ads-config"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'AW-17987586353');
+            `,
+          }}
+        />
         {/* Preload fuentes críticas */}
         <link
           rel="preconnect"
