@@ -26,7 +26,7 @@ export function CTAButton({
 
   const selectedVariant = variants[variant] || variants.primary;
 
-  const buttonClasses = `${selectedVariant} px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer inline-flex items-center justify-center gap-2 ${className}`;
+  const buttonClasses = `conversion-cta ${selectedVariant} px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer inline-flex items-center justify-center gap-2 ${className}`;
 
   const content = (
     <button

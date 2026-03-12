@@ -147,7 +147,7 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
               href={quickWhatsAppLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-6 py-4 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
+              className="conversion-cta inline-flex items-center gap-3 px-6 py-4 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600 transition-all duration-300 shadow-lg hover:shadow-xl mb-8"
             >
               <MessageCircle className="w-6 h-6" />
               Contactar por WhatsApp directamente
@@ -236,7 +236,7 @@ export default function ContactoClient({ whatsappNumber }: ContactoClientProps) 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full flex items-center justify-center space-x-2 py-4 text-lg bg-techmedis-primary hover:bg-techmedis-primary/90 text-white px-6 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50"
+                  className="conversion-formulario w-full flex items-center justify-center space-x-2 py-4 text-lg bg-techmedis-primary hover:bg-techmedis-primary/90 text-white px-6 rounded-lg font-semibold transition-all duration-300 shadow-sm hover:shadow-md disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <span>Enviando...</span>

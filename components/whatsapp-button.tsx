@@ -83,7 +83,7 @@ export function WhatsAppButton({
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-300 group ${
+      className={`conversion-cta fixed bottom-6 right-6 z-50 flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:bg-green-600 hover:scale-110 active:scale-95 transition-all duration-300 group ${
         isVisible ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
       }`}
       aria-label="Contactar por WhatsApp"
